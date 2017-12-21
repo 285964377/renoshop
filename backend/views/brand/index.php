@@ -2,8 +2,8 @@
 
 ?>
 <table class="table">
+    <?= yii\bootstrap\Html::a('添加',['brand/add'],['class'=>'btn btn-success btn-sm  glyphicon glyphicon-plus'])?>
     <tr>
-
     <th>ID</th>
     <th>品牌名字</th>
     <th>简介</th>
@@ -13,20 +13,19 @@
     <th>操作</th>
     </tr>
     <?php foreach ($Brand as $b): ?>
-
-    <tr id="<?=$b->id?>" url="<?= \yii\helpers\Url::to(['brand/delete'])?>"
-        <td id="<?=$b->id?>"> <?=$b->id?></td>
+        <tr id="<?=$b->id?>" url="<?= \yii\helpers\Url::to(['brand/delete'])?>">
+        <td><?=$b->id?></td>
         <td><?=$b->name?></td>
         <td><?=$b->intro?></td>
         <td><img src="<?=$b->logo?>" width="90"></td>
         <td><?=$b->sort?></td>
         <td><?=$b->status==1?'正常':"隐藏"?></td>
-        <td><?= yii\bootstrap\Html::a('添加',['brand/add'],['class'=>'btn btn-success btn-sm  glyphicon glyphicon-plus'])?>
+        <td>
           <?= yii\bootstrap\Html::a('修改',['brand/edit','id'=>$b->id],['class'=>'btn btn-success btn-sm  glyphicon glyphicon-wrench'])?>
           <?= yii\bootstrap\Html::a('删除',null,['class'=>'btn btn-success btn-sm  glyphicon glyphicon-trash'])?>
         </td>
-    </tr>
-<?php endforeach;?>
+        </tr>
+    <?php endforeach;?>
 </table>
 <?php
 /*

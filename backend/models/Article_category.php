@@ -5,7 +5,7 @@ use yii\db\ActiveRecord;
 
 class Article_category extends ActiveRecord{
 
-      public function rules()
+    public function rules()
       {
           return [
               [['name','intro','status'],'required','message'=>'亲!都是必填的哦!']
