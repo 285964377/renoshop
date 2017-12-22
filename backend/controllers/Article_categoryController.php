@@ -34,24 +34,24 @@ class Article_categoryController extends Controller {
       }
       return $this->render('add',['modle'=>$model]);
    }
-     public function actionEdit($id){
-      //实例化
-      $model=Article_category::findOne(['id'=>$id]);
-      $request= new Request();
-      if($request->isPost){
-      //加载
-      $model->load($request->post());
-       //验证
-      if($model->validate()){
-       //保存
-      $model->save();
-      //提示信息
-      \Yii::$app->session->setFlash('success','添加成功了');
-       //提示之后则跳转到首页
-       return $this->redirect(['index']);
-       }else{//如果出错则打印出错误信息;
-       var_dump($model->getErrors());
-       }
+    public function actionEdit($id){
+     //实例化
+     $model=Article_category::findOne(['id'=>$id]);
+     $request= new Request();
+     if($request->isPost){
+     //加载
+     $model->load($request->post());
+      //验证
+     if($model->validate()){
+      //保存
+     $model->save();
+     //提示信息
+     \Yii::$app->session->setFlash('success','添加成功了');
+      //提示之后则跳转到首页
+      return $this->redirect(['index']);
+      }else{//如果出错则打印出错误信息;
+      var_dump($model->getErrors());
+      }
       }
       return $this->render('edit',['modle'=>$model]);
    }

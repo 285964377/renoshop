@@ -22,7 +22,6 @@
             <?= yii\bootstrap\Html::a('添加',['article_category/add'],['class'=>'btn btn-success btn-sm  glyphicon glyphicon-plus']) ?>
             <?= yii\bootstrap\Html::a('修改',['article_category/edit','id'=>$A->id],['class'=>'btn btn-success btn-sm  glyphicon glyphicon-wrench']) ?>
             <?= yii\bootstrap\Html::a('删除',null,['class'=>'btn btn-success btn-sm  glyphicon glyphicon-trash']) ?>
-
         </td>
     </tr>
     <?php endforeach; ?>

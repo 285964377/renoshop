@@ -43,7 +43,7 @@ class BrandController extends \yii\web\Controller
      //提示信息
      \Yii::$app->session->setFlash('success', '添加成功');
       return $this->redirect(['index']);
-        }
+       }
       return $this->render('add', ['modle' => $model]);
     }
      //修改方法
@@ -62,10 +62,11 @@ class BrandController extends \yii\web\Controller
        }
      return $this->render('edit',['model'=>$model]);
      }
-     public function actionDelete($id){
-      $b=Brand::findOne(['id'=>$id]);
-      $b::updateAll(['status'=>-1],['id'=>$id]);
+    public function actionDelete($id){
+     $b=Brand::findOne(['id'=>$id]);
+     $b::updateAll(['status'=>-1],['id'=>$id]);
       // \Yii::$app->session->setFlash('success', '删除成功');
       }
+     //远程测试跨域
 
  }
