@@ -4,6 +4,8 @@ namespace backend\controllers;
 use backend\models\Article;
 use backend\models\Article_category;
 use backend\models\Article_detail;
+use backend\models\ArticleCategory;
+use backend\models\ArticleDetail;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Request;
@@ -21,7 +23,7 @@ class ArticleController extends Controller
    {
     $modle = new Article();//文章实例化
     $request = new Request();
-    $detail = new Article_detail();//文章详情实例化
+    $detail = new ArticleDetail();//文章详情实例化
     if ($request->isPost){
         //加载
      $modle->load($request->post());
@@ -41,8 +43,8 @@ class ArticleController extends Controller
     \Yii::$app->session->setFlash('success','添加成功');
      return $this->redirect(['index']);
     }
-    $Article_category=Article_category::find()->all();
-    $option=ArrayHelper::map($Article_category,'id','name');
+    $ArticleCategory=ArticleCategory::find()->all();
+    $option=ArrayHelper::map($ArticleCategory,'id','name');
     //  var_dump($option);exit;
     return $this->render('add',['modle'=>$modle,'option'=>$option]);
    }
@@ -71,7 +73,7 @@ class ArticleController extends Controller
     }
     public function actionEdit($id){
      $modle =Article::findOne(['id'=>$id]);
-     $detail = new Article_detail();//文章详情实例化
+     $detail = new ArticleDetail();//文章详情实例化
      $request = new Request();
      if ($request->isPost) {
             //加载
@@ -93,7 +95,7 @@ class ArticleController extends Controller
       return $this->redirect(['index']);
      }
       //数据遍历用于文章分类
-      $Article_category=Article_category::find()->all();
+      $Article_category=ArticleCategory::find()->all();
       //数组 id  和name
       $option=ArrayHelper::map($Article_category,'id','name');
       //var_dump($option);exit;

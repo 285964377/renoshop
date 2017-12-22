@@ -27,7 +27,7 @@ class Article extends ActiveRecord{
     //文章分类的的表ID 和文章的的id 关联
    public function getArticle_category(){
 
-   return $this->hasOne(Article_category::className(),['id'=>'article_category_id']);
+   return $this->hasOne(ArticleCategory::className(),['id'=>'article_category_id']);
 
    }
    //处理成中文
