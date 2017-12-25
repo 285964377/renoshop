@@ -17,7 +17,7 @@ class BrandController extends \yii\web\Controller
     }
     //ajax文件上传处理
     public function actionUploader(){
-   //标签名字 而不是Model 了
+   //标签名字而不是Model 了 隐藏域的name= file 所以写file
     $img = UploadedFile::getInstanceByName('file');
     $FimagName= '/upload/'.uniqid().'.'.$img->extension;
     //保存路径

@@ -7,15 +7,14 @@
     echo $form->field($modle, 'name')->textInput();//品牌名字
     echo $form->field($modle, 'intro')->textarea();//简介
     echo $form->field($modle, 'logo')->hiddenInput();//图片隐藏
-
     //注册js 和css文件
     $this->registerCssFile('@web/webuploader/webuploader.css');
     $this->registerJsFile('@web/webuploader/webuploader.js', [
-        //指定这个文件依赖Jqurey 文件  在Jqurer文件之后加载
-        'depends' => yii\web\JqueryAsset::className()
+    //指定这个文件依赖Jqurey 文件  在Jqurer文件之后加载
+    'depends' => yii\web\JqueryAsset::className()
     ]);
     //写入html代码按钮
-    echo <<<HTML
+  echo <<<HTML
         <div id="uploader-demo">
             <!--用来存放item-->
             <div id="fileList" class="uploader-list"></div>
@@ -49,7 +48,7 @@ HTML;
             
         });
         // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-        uploader.on( 'uploadSuccess', function( file,response) {
+        uploader.on('uploadSuccess', function( file,response) {
             //$( '#'+file.id ).addClass('upload-state-done');
             console.debug(response);
             //回显图片
@@ -58,9 +57,8 @@ HTML;
             $("#brand-logo").val(response.url)
         });
 JS;
-    $this->registerJs($js);
 
-
+$this->registerJs($js);
     echo $form->field($modle, 'sort')->textInput();//排序
     echo $form->field($modle, 'status')->radioList([0 => '隐藏', 1 => '正常']);//排序
     echo "<button type='submit' class='btn btn-primary' >提交</button>";

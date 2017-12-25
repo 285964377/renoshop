@@ -2,10 +2,10 @@
 
 namespace backend\controllers;
 use backend\models\Article;
-use backend\models\Article_category;
-use backend\models\Article_detail;
 use backend\models\ArticleCategory;
 use backend\models\ArticleDetail;
+//use backend\models\ArticleCategory;
+//use backend\models\ArticleDetail;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Request;

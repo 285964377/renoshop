@@ -44,6 +44,7 @@ $js= <<<JS
           var node =zTreeObj.getNodeByParam("id",$model->id,null)
           zTreeObj.selectNode(node);
 JS;
+
 $this->registerJs($js);
 
 echo <<<HTML

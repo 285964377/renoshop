@@ -2,7 +2,7 @@
 
 namespace backend\models;
 
-use backend\controllers\Article_categoryController;
+use backend\controllers\ArticlecategoryController;
 use yii\db\ActiveRecord;
 
 class Article extends ActiveRecord{
@@ -30,6 +30,7 @@ class Article extends ActiveRecord{
    return $this->hasOne(ArticleCategory::className(),['id'=>'article_category_id']);
 
    }
+
    //处理成中文
    public function attributeLabels()
     {
