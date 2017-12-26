@@ -19,7 +19,7 @@ return [
         'user' => [
             //实现认证接口的类
             'identityClass' => 'backend\models\Userlist',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => true,//默认开启的自动登录
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],
         'session' => [

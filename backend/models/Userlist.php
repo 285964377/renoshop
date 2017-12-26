@@ -4,11 +4,13 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
  class  Userlist extends  ActiveRecord implements IdentityInterface {
-
+  public $password2;
 public function rules()
 {
     return [
         [['username','sex','password','email'],'required','message'=>'不能是空'],
+        ['password','compare','compareAttribute'=>'password2','message'=>'两次密码必须一致'],
+        ['password2','compare','compareAttribute'=>'password','message'=>'密码必须一致']
 
     ];
 }
@@ -62,7 +64,7 @@ public function rules()
       */
      public function getAuthKey()
      {
-         // TODO: Implement getAuthKey() method.
+        return  $this->auth_key;
      }
 
      /**
@@ -75,6 +77,6 @@ public function rules()
       */
      public function validateAuthKey($authKey)
      {
-         // TODO: Implement validateAuthKey() method.
+         return $this->getAuthKey()==$authKey;
      }
  }
