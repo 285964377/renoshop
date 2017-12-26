@@ -1,9 +1,28 @@
 <?php
+//$form=\yii\bootstrap\ActiveForm::begin([
+//    'method'=>'get',
+//    'action'=>\yii\helpers\Url::to(['goods/index']),
+//    'options'=>['class'=>'form-inline']
+//]);
+//echo $form->field("$goods",'name')->textInput(['placeholder'=>'商品名'])->label(false);
+//echo $form->field("$goods",'sn')->textInput(['placeholder'=>'货号'])->label(false);
+//echo \yii\bootstrap\Html::submitButton('搜索',['class'=>'btn btn-info']);
+//$form=\yii\bootstrap\ActiveForm::end();
 
 ?>
-<form class="">
-
-
+<!--//搜索-->
+<form class="form-inline" action="" method="get">
+    <div class="form-group field-goodssearchform-name has-success">
+   <input type="text"  name="name" class="form-control"placeholder="商品名查询">
+    </div>
+    <div class="form-group field-goodssearchform-name has-success">
+        <input type="text" name="sn" class="form-control"placeholder="货号">
+    </div>
+    <div class="form-group field-goodssearchform-name has-success">
+        <input type="text" name="shop_price" class="form-control"placeholder="售价">
+    </div>
+    <button type="submit" class="btn btn-default">
+            <span class="glyphicon glyphicon-search"></span>搜索</button>
 </form>
 <table class="table">
     <?= yii\bootstrap\Html::a("添加",['goods/add'],['class'=>'btn btn-default glyphicon glyphicon-pencil'])?>

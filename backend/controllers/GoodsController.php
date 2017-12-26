@@ -19,17 +19,36 @@ class GoodsController extends Controller{
 
    public function actionIndex(){
        //商品列表
-     $goods =Goods::find()->all();
+
+       //实例化 调用方法
+      $request = \Yii::$app->request;
+      $name =empty($request->get('name')) ? '':$request->get('name');
+      $sn =empty( $request->get('sn'))? '':$request->get('sn');
+      $shop_price =empty($request->get('shop_price'))?'':$request->get('shop_price');
+       //查询
+      $goods= Goods::find();
+      if($name){
+      $goods->where(['like','name',$name]);
+      }
+      if($sn){
+     $goods->andWhere(['like','sn',$sn]);
+      }
+      if($shop_price){
+      $goods->andWhere(['like','shop_price',$shop_price]);
+      }
+       //$goods =Goods::find()->where(['like', 'name', $name])->andWhere(['like','sn',$sn])->andWhere(['like','shop_price',$shop_price]);
+     //搜索查询用于列表的搜索功能
+      $goods= $goods->all();
      return $this->render('index',['goods'=>$goods]);
 
    }
    //Ajax文件上传
    public function actionUploader()
    {
-       //name= file 所以
-       $img = UploadedFile::getInstanceByName('file');
-       $FimagName = '/upload/' . uniqid() . '.' . $img->extension;
-       if ($img->saveAs(\Yii::getAlias('@webroot') . $FimagName, 0)) {
+     //name= file 所以
+     $img = UploadedFile::getInstanceByName('file');
+     $FimagName = '/upload/' . uniqid() . '.' . $img->extension;
+     if ($img->saveAs(\Yii::getAlias('@webroot') . $FimagName, 0)) {
            ///将图片上传到七牛云
 //   $accessKye ='qVKexGMs3BO60lgfBFQcnAiZpVym9tJz2k2Qsz8g';
 //   $secretKye='T8ffPYvx8pG0WuLZ8W76gVYSDZi2-2r47muh-_Lu';
@@ -61,9 +80,10 @@ class GoodsController extends Controller{
        }
    }
    public function actionAdd(){
-       //实例化
-     $model = new Goods();
+     //实例化
+    $model = new Goods();
     $request = new Request();
+    //内容详情实例化
     $Intor = new GoodsIntro();
     if($request->isPost){
 
@@ -91,11 +111,12 @@ class GoodsController extends Controller{
          $count->count =1;//保持1 不变
          $count->day= $date;
      }
-     $st=00000;
+     $st='00000';
      $count->save();
     //$model->sn=date('Ymd').str_pad($count->count,6,0,0);
     ////拼接时间
-     $model->sn=date('Ymd').$st;
+     $model->sn=date('Ymd').$st+$count->count;
+     // var_dump($model->sn);exit;
     //var_dump($model->sn);exit;
      $model->create_time= time();
      $model->save();
@@ -146,6 +167,7 @@ class GoodsController extends Controller{
             ]
         ];
     }
+    //修改
       public function actionEdit($id){
 
           //实例化
