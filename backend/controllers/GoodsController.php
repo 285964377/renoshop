@@ -95,11 +95,10 @@ class GoodsController extends Controller{
      $date = date('Y-m-d');
      $count=GoodsDayCount::findOne(['day'=>$date]);
      //$count = str_pad('0',5,0,STR_PAD_RIGHT);
-//     var_dump($count);die;
+
      if($count!=null){//如果不是空那么就加1
      //$Goods= new GoodsDayCount();
      // $count=1;
-//     var_dump($count+=1);die;
      //$Goods_count= GoodsDayCount::findOne(['day'=>$date]);
      //$a = $count +=1;
      //var_dump($a);
@@ -112,12 +111,13 @@ class GoodsController extends Controller{
          $count->day= $date;
      }
      $st='00000';
+     //保存不变的count = 1
      $count->save();
     //$model->sn=date('Ymd').str_pad($count->count,6,0,0);
     ////拼接时间
      $model->sn=date('Ymd').$st+$count->count;
      // var_dump($model->sn);exit;
-    //var_dump($model->sn);exit;
+    //添加时间保存
      $model->create_time= time();
      $model->save();
      //商品内容详情保存赋值
