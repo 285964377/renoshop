@@ -8,13 +8,14 @@ class LoginForm extends Model{
     public $password;//密码
     //public $auth_key;//自动登录值
     public $success;//自动登录
-    public $password2;
+    //public $password2;
 
     //验证规则
     public function rules(){
         return[
             //不能是空
             [['username','password'],'required','message'=>'必填不能为空哦'],
+
 
             ['success','safe'],
 

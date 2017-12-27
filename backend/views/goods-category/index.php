@@ -17,8 +17,7 @@
         <td><?=$g->intro?></td>
         <td>
             <?=yii\bootstrap\Html::a('修改',['goods-category/edit','id'=>$g->id],['class'=>'btn btn-default glyphicon glyphicon-wrench'])?>
-             <?=yii\bootstrap\Html::a('删除',['goods-category/delete','id'=>$g->id],['class'=>'btn btn-default glyphicon glyphicon-trash
-'])?>
+             <?=yii\bootstrap\Html::a('删除',['goods-category/delete','id'=>$g->id],['class'=>'btn btn-default glyphicon glyphicon-trash'])?>
         </td>
     </tr>
     <?php endforeach;?>

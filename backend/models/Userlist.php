@@ -3,7 +3,7 @@ namespace backend\models;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
- class  Userlist extends  ActiveRecord implements IdentityInterface {
+class  Userlist extends  ActiveRecord implements IdentityInterface {
   public $password2;
 public function rules()
 {

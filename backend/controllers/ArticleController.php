@@ -13,31 +13,31 @@ use yii\web\Request;
 class ArticleController extends Controller
 {
     //列表
-   public function actionIndex()
+ public function actionIndex()
    {
     $Acticle = Article::find()->all();
     return $this->render('index', ['Acticle' => $Acticle]);
    }
      //添加功能
-   public function actionAdd()
+ public function actionAdd()
    {
     $modle = new Article();//文章实例化
     $request = new Request();
     $detail = new ArticleDetail();//文章详情实例化
     if ($request->isPost){
-        //加载
-     $modle->load($request->post());
-     //时间戳 传入数据库
-     $create_time=time();
-     $modle->create_time= $create_time;
-     //加载
-     if($modle->validate()){
-     //保存文章的数据
-     $modle->save();
-     //复制 文章详情的字段content = model 的这个字段内容
-     $detail->content=$modle->content;
-     //保存到文章详情表
-     $detail->save();
+       //加载
+    $modle->load($request->post());
+    //时间戳 传入数据库
+    $create_time=time();
+    $modle->create_time= $create_time;
+    //加载
+    if($modle->validate()){
+    //保存文章的数据
+    $modle->save();
+    //复制 文章详情的字段content = model 的这个字段内容
+    $detail->content=$modle->content;
+    //保存到文章详情表
+    $detail->save();
     }
     //添加成功则给出提示信息
     \Yii::$app->session->setFlash('success','添加成功');
@@ -51,7 +51,7 @@ class ArticleController extends Controller
 
 
     //富文本编辑器
-    public function actions()
+ public function actions()
     {
 
     return [
@@ -66,39 +66,39 @@ class ArticleController extends Controller
      ];
     }
     //删除 ajax 请求提交删除
-    public function actionDelete($id){
+ public function actionDelete($id){
     $Article=Article::findOne(['id'=>$id]);
     $Article::updateAll(['status'=>-1],['id'=>$id]);
 
     }
-    public function actionEdit($id){
-     $modle =Article::findOne(['id'=>$id]);
-     $detail = new ArticleDetail();//文章详情实例化
-     $request = new Request();
-     if ($request->isPost) {
-            //加载
-      $modle->load($request->post());
-      //时间戳 传入数据库
-      $create_time=time();
-      $modle->create_time= $create_time;
-      //加载
-      if($modle->validate()){
-      //保存文章的数据
-      $modle->save();
-      //复制 文章详情的字段content = model 的这个字段内容
-      $detail->content=$modle->content;
-      //保存到文章详情表
-      $detail->save();
-     }
-       //添加成功则给出提示信息
-      \Yii::$app->session->setFlash('success','修改成功');
-      return $this->redirect(['index']);
-     }
-      //数据遍历用于文章分类
-      $Article_category=ArticleCategory::find()->all();
-      //数组 id  和name
-      $option=ArrayHelper::map($Article_category,'id','name');
-      //var_dump($option);exit;
-      return $this->render('edit',['modle'=>$modle,'option'=>$option]);
+ public function actionEdit($id){
+    $modle =Article::findOne(['id'=>$id]);
+    $detail = new ArticleDetail();//文章详情实例化
+    $request = new Request();
+    if ($request->isPost) {
+          //加载
+    $modle->load($request->post());
+    //时间戳 传入数据库
+    $create_time=time();
+    $modle->create_time= $create_time;
+    //加载
+    if($modle->validate()){
+    //保存文章的数据
+    $modle->save();
+    //复制 文章详情的字段content = model 的这个字段内容
+    $detail->content=$modle->content;
+    //保存到文章详情表
+    $detail->save();
+    }
+      //添加成功则给出提示信息
+     \Yii::$app->session->setFlash('success','修改成功');
+     return $this->redirect(['index']);
+    }
+     //数据遍历用于文章分类
+    $Article_category=ArticleCategory::find()->all();
+    //数组 id  和name
+    $option=ArrayHelper::map($Article_category,'id','name');
+    //var_dump($option);exit;
+    return $this->render('edit',['modle'=>$modle,'option'=>$option]);
     }
 }

@@ -3,6 +3,7 @@
 ?>
 <table class="table">
     <?= yii\bootstrap\Html::a('添加',['userlist/add'],['class'=>'btn btn-default btn btn-default glyphicon glyphicon-pencil'])?>
+
     <tr>
         <th>用户名</th>
         <th>性别</th>
