@@ -179,11 +179,11 @@ class RbacController extends Controller{
      }
      return $this->render('role-edit',['model'=>$model,'option'=>$option]);
     }
+    //删除
     public function actionRoleDelete($name){
     $authManager= \Yii::$app->authManager;
     $role= $authManager->getRole($name);
     $authManager->remove($role);
-
 
     }
 
