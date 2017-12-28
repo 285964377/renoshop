@@ -5,12 +5,16 @@ use yii\web\IdentityInterface;
 
 class  Userlist extends  ActiveRecord implements IdentityInterface {
   public $password2;
+  public $description;
+
+
 public function rules()
 {
+
     return [
-        [['username','sex','password','email'],'required','message'=>'不能是空'],
-        ['password','compare','compareAttribute'=>'password2','message'=>'两次密码必须一致'],
-        ['password2','compare','compareAttribute'=>'password','message'=>'密码必须一致']
+        [['username','sex','password','email','description'],'required','message'=>'不能是空'],
+        //['password','compare','compareAttribute'=>'password2','message'=>'两次密码必须一致'],
+        //['password2','compare','compareAttribute'=>'password','message'=>'密码必须一致']
 
     ];
 }

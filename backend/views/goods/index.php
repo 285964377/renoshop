@@ -25,6 +25,7 @@
             <span class="glyphicon glyphicon-search"></span>搜索</button>
 </form>
 <table class="table">
+    <h1>商品分类管理</h1>
     <?= yii\bootstrap\Html::a("添加",['goods/add'],['class'=>'btn btn-default glyphicon glyphicon-pencil'])?>
     <tr>
 
@@ -45,7 +46,7 @@
     </tr>
     <?php foreach ($goods as $g): ?>
 
-    <tr>
+    <tr id="<?=$g->id?>" url="<?=yii\helpers\Url::to(['goods/delete'])?>">
         <td><?=$g->name?></td>
         <td><?=$g->sn?></td>
         <td><img src="<?=$g->logo?> "width="120"></td>
@@ -60,13 +61,28 @@
         <td><?=date('Y-m-d H:i',($g->create_time))?></td>
         <td>
             <?=yii\bootstrap\Html::a('相册',['goods/gallery','id'=>$g->id],['class'=>'btn btn-default glyphicon glyphicon-picture'])?>
-          <?=yii\bootstrap\Html::a('删除',['goods/delete','id'=>$g->id],['class'=>'btn btn-default glyphicon  glyphicon-trash'])?>
-            <?=yii\bootstrap\Html::a('修改',['goods/edit','id'=>$g->id],['class'=>'btn btn-default glyphicon  glyphicon glyphicon-wrench'])?>
-
+            <?=yii\bootstrap\Html::a('修改',['goods/edit'],['class'=>'btn btn-default glyphicon  glyphicon glyphicon-wrench'])?>
+            <?=yii\bootstrap\Html::a('删除',null,['class'=>'btn btn-default glyphicon  glyphicon-trash'])?>
 
         </td>
     </tr>
 <?php  endforeach; ?>
 
 </table>
+<?php
+    $js = <<<JS
+    $("table").on("click",'tr td a:last-child',function() {
+        //查找tr下面的 id 属性
+        var id = $(this).closest("tr").attr('id');
+        var url=$(this).closest('tr').attr('url');
+        $.get(url,{"id":id});
+        $(this).closest("tr").remove();
+      
+    })
+    
+
+JS;
+$this->registerJs($js);
+
+?>
 

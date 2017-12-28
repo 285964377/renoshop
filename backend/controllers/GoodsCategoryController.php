@@ -44,15 +44,14 @@ class GoodsCategoryController extends Controller{
    //修改功能
    public function actionEdit($id){
      $model =GoodsCategory::findOne(['id'=>$id]);
-
      $request = new Request();
      if($request->isPost){
-        //加载
-      $model->load($request->post());
-      //此判断的意思是: 如果自己经在这个目录下了 那么还要之意孤行是不会被修改成功的;
-      if($model->parent_id==$model->parent_id){
-          \Yii::$app->session->setFlash('success','已经在自己目录了不能在修改到自己目录里');
-          return $this->redirect(['index']);
+      //加载
+     $model->load($request->post());
+     //此判断的意思是: 如果自己经在这个目录下了 那么还要之意孤行是不会被修改成功的;
+     if($model->parent_id==$model->parent_id){
+     \Yii::$app->session->setFlash('success','已经在自己目录了不能在修改到自己目录里');
+     return $this->redirect(['index']);
       }
          //验证
      if($model->validate()){
@@ -65,10 +64,10 @@ class GoodsCategoryController extends Controller{
      $model->makeRoot();
      }//保存
 
-             $model->save();
-
-
+     $model->save();
      }
+     \Yii::$app->session->setFlash('success','添加成功');
+     return $this->redirect(['index']);
      }
      return $this->render('edit',['model'=>$model]);
 
@@ -79,12 +78,10 @@ class GoodsCategoryController extends Controller{
     if($Goods->parent_id){
         //提示信息
         \Yii::$app->session->setFlash('success','存在下级根无法被删除');
-        return $this->redirect(['index']);
+       // return $this->redirect(['index']);
     }else{
         //没有就成功删除
         $Goods= GoodsCategory::deleteAll("id in ($id)");
-        \Yii::$app->session->setFlash('success','删除成功');
-        return $this->redirect(['index']);
     }
 
    }

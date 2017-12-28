@@ -1,23 +1,27 @@
 <?php
 namespace backend\controllers;
 use backend\models\LoginForm;
+use backend\models\RoleForm;
 use backend\models\Userlist;
+use yii\rbac\Role;
 use yii\web\Controller;
 use yii\web\Request;
 
 class  UserlistController extends Controller{
-
-    public function actionIndex(){
+    public $enableCsrfValidation=false;
+  //用户的列表展示
+ public function actionIndex(){
     $user= Userlist::find()->all();
     return $this->render('index',['user'=>$user]);
 
     }
-    public function actionUpdate($id){
+    //用户修改密码功能此功能作废不用了
+ public function actionUpdate($id){
      $model = Userlist::findOne(['id'=>$id]);
      $request = new Request();
      if($request->isPost){
-      $model->load($request->post());
-      //var_dump($model);exit;
+     $model->load($request->post());
+     //var_dump($model);exit;
      if($model->validate()){
 
      }
@@ -36,50 +40,100 @@ class  UserlistController extends Controller{
     }
    //添加
  public function actionAdd(){
-    $model = new Userlist();
-    $request =new Request();
-    if($request->isPost){
-     //$auth_key=  rand(1,20);
-     //shuffle($auth_key);
-     //$model->auth_key = $auth_key;
-    $model->load($request->post());
-
-    if($model->validate()){
-
+      $role = new RoleForm();
+      $authManager = \Yii::$app->authManager;
+      //获取所有角色
+      $auth=$authManager->getRoles();
+       //遍历存入数组 放入多选框
+      $arr= [];
+      foreach ($auth as $a) {
+        $arr[$a->name]= $a->description;
       }
+      $model = new Userlist();
+      $request =new Request();
+      if($request->isPost){
+
+      $model->load($request->post());
+
+     if($model->validate()){
       //添加密码时候采用 Hash加密
-    $user= new Userlist();
-    $model->password=\Yii::$app->security->generatePasswordHash($user->password);
-    $model->save();
-    \Yii::$app->session->setFlash('success','添加成功');
-    return $this->redirect(['index']);
+      $user= new Userlist();
+      $model->password=\Yii::$app->security->generatePasswordHash($user->password);
+      $model->save();
+      $authManager = \Yii::$app->authManager;
+      $auth2=$authManager->getRoles();
+      $arr2= [];
+      foreach ($auth2 as $a) {
+      $arr2[$a->name]= $a->description;
+      $userId = $model->id;
+      $authManager->assign($a ,$userId);
+      }
      }
-     return $this->render('add',['model'=>$model]);
+
+     \Yii::$app->session->setFlash('success','添加成功');
+     return $this->redirect(['index']);
+
+     }
+     return $this->render('add',['model'=>$model,'arr'=>$arr]);
     }
    //修改
  public function actionEdit($id){
+     $role = new RoleForm();
+     $authManager = \Yii::$app->authManager;
+     //获取所有角色
+
+     $auth=$authManager->getRoles();
+     //查询出改用户所拥有的角色
+     $arr2 = $authManager->getRolesByUser($id);
+    //空数组保存
+     $Byuser =[];
+    //遍历角色到页面上,就是此用户所拥有的角色回显
+     foreach ($arr2 as $key=>$v){
+       $Byuser[]=$key;
+     }
+     //遍历存入数组 放入多选框
+     $arr= [];
+     foreach ($auth as $a) {
+         $arr[$a->name]= $a->description;
+     }
+
      $model = Userlist::findOne(['id'=>$id]);
+     //赋值回显用户所拥有的角色
+     $model->description =$Byuser;
      $request = new Request();
      if($request->isPost){
      $model->load($request->post());
-
      if($model->validate()){
+         //添加密码时候采用 Hash加密
+         $user= new Userlist();
+         $model->password=\Yii::$app->security->generatePasswordHash($user->password);
+         $model->save();
+         $authManager = \Yii::$app->authManager;
+         $auth2=$authManager->getRoles();
+         $arr2= [];
+         foreach ($auth2 as $a) {
+         $arr2[$a->name]= $a->description;
+         $authManager->assign($a,$id);
+         }
 
-        $model->save();
       }
      \Yii::$app->session->setFlash('success','添加成功');
      return $this->redirect(['index']);
      }
 
-     return $this->render('edit',['model'=>$model]);
-    }
-    public function actionDelete($id){
-     Userlist::deleteAll("id in ($id)");
-     \Yii::$app->session->setFlash('success','删除成功');
-     return $this->redirect(['index']);
+     return $this->render('edit',['model'=>$model,'arr'=>$arr]);
+  }
+ public function actionDelete($id){
+//     Userlist::deleteAll("id in ($id)");
+     //不会删除用户只回删除持有的角色
+    $authManager= \Yii::$app->authManager;
+    $authManager->getRolesByUser($id);
+    $authManager->revokeAll($id);
+//    \Yii::$app->session->setFlash('success','删除成功');
+//    return $this->redirect(['index']);
 
     }
-    public function actionLogin(){
+ public function actionLogin(){
      //登陆表单
      $model = new LoginForm();
      $request = \Yii::$app->request;
@@ -87,7 +141,6 @@ class  UserlistController extends Controller{
      $model->load($request->post());
      //var_dump($model);exit;
      if($model->login()){
-
       //提示信息
      \Yii::$app->session->setFlash('success','登陆成功');
       //跳转
@@ -98,7 +151,7 @@ class  UserlistController extends Controller{
       return $this->render('login',['model'=>$model]);
     }
     //是否登录验证
-    public function actionCenter(){
+ public function actionCenter(){
      //如果没有登录则提示未登录返回到登录页面
      if(\Yii::$app->user->isGuest){
          //
@@ -109,15 +162,13 @@ class  UserlistController extends Controller{
      }
     }
 
-    //注销点击之后
-   public function actionLogout(){
+    //用户注销
+ public function actionLogout(){
     \Yii::$app->user->logout();
     return $this->redirect(['login']);
 
     }
-    //修改密码
-    public function actionEdpassword(){
 
-    }
+
 }
 

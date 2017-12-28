@@ -12,7 +12,6 @@ class RbacController extends Controller{
   public $enableCsrfValidation=false;
     //列表页
   public function actionIndex(){
-
      //$pre = Permission::find()->all();
      $authManager =\Yii::$app->authManager;
      $model=$authManager->getPermissions();
@@ -23,22 +22,22 @@ class RbacController extends Controller{
   }
   //权限的添加
   public function actionAdd(){
-      $model = new PermissionForm();
-      $request = \Yii::$app->request;
-      //开启场景进行验证规则
-      $model->scenario = PermissionForm::SCENARIO_ADD_PERMISSION;
-      if($request->isPost){
-      $model->load($request->post());
-      if($model->validate()){
-      //实例化方便使用
-      $authManager= \Yii::$app->authManager;
-      $Permission =new \yii\rbac\Permission();
-      //赋值
-      $Permission->name=$model->name;
-      $Permission->description = $model->description;
-      //添加到数据库
-      $authManager->add($Permission);
-      \Yii::$app->session->setFlash('success','添加成功');
+     $model = new PermissionForm();
+     $request = \Yii::$app->request;
+     //开启场景进行验证规则
+     $model->scenario = PermissionForm::SCENARIO_ADD_PERMISSION;
+     if($request->isPost){
+     $model->load($request->post());
+     if($model->validate()){
+     //实例化方便使用
+     $authManager= \Yii::$app->authManager;
+     $Permission =new \yii\rbac\Permission();
+     //赋值
+     $Permission->name=$model->name;
+     $Permission->description = $model->description;
+     //添加到数据库
+     $authManager->add($Permission);
+     \Yii::$app->session->setFlash('success','添加成功');
        return $this->redirect(['index']);
     }else{
       var_dump($model->getErrors());
@@ -186,7 +185,6 @@ class RbacController extends Controller{
     $authManager->remove($role);
 
     }
-
     //测试datatables插件
    public function actionTable(){
    return  $this->render('table');

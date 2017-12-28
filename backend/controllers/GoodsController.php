@@ -97,12 +97,6 @@ class GoodsController extends Controller{
      //$count = str_pad('0',5,0,STR_PAD_RIGHT);
 
      if($count!=null){//如果不是空那么就加1
-     //$Goods= new GoodsDayCount();
-     // $count=1;
-     //$Goods_count= GoodsDayCount::findOne(['day'=>$date]);
-     //$a = $count +=1;
-     //var_dump($a);
-     //$Goods_count::updateAll(['count'=>$Goods_count->count+1],['day'=>$date]);//die;
      $count->count+=1;
      }else{
          //$count = str_pad('0',5,0,STR_PAD_RIGHT);

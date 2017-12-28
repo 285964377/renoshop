@@ -14,7 +14,7 @@
         <th>操作</th>
     </tr>
     <?php  foreach ($user as $u):?>
-    <tr>
+    <tr id="<?=$u->id?>" url="<?= yii\helpers\Url::to(['userlist/delete'])?> ">
         <td><?=$u->username?></td>
         <td><?=$u->sex?></td>
         <td><?=$u->password?></td>
@@ -23,12 +23,29 @@
         <td><?=$u->last_login_ip?></td>
         <td>
           <?= yii\bootstrap\Html::a('修改',['userlist/edit','id'=>$u->id],['class'=>'btn btn-default  glyphicon glyphicon-tags'])?>
-          <?= yii\bootstrap\Html::a('删除',['userlist/delete','id'=>$u->id],['class'=>'btn btn-default  glyphicon glyphicon-trash'])?>
-          <?= yii\bootstrap\Html::a('修改密码',['userlist/update','id'=>$u->id],['class'=>'btn btn-default glyphicon  glyphicon glyphicon-wrench'])?>
 
+          <?= yii\bootstrap\Html::a('删除',null,['class'=>'btn btn-default  glyphicon glyphicon-trash'])?>
         </td>
     </tr>
  <?php  endforeach; ?>
 
+
 </table>
+<?php
+$js = <<<JS
+  
+        $("table").on("click",'tr td a:last-child',function() {
+        //查找tr下面的 id 属性
+        var id = $(this).closest("tr").attr('id');
+        var url=$(this).closest('tr').attr('url');
+        $.get(url,{"id":id});
+        $(this).closest("tr").remove();
+      
+    })
+
+JS;
+$this->registerJs($js);
+
+
+?>
 
