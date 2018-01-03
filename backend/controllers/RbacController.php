@@ -11,7 +11,7 @@ use yii\web\Request;
 class RbacController extends Controller{
   public $enableCsrfValidation=false;
     //列表页
-  public function actionIndex(){
+ public function actionIndex(){
      //$pre = Permission::find()->all();
      $authManager =\Yii::$app->authManager;
      $model=$authManager->getPermissions();
@@ -21,7 +21,7 @@ class RbacController extends Controller{
 
   }
   //权限的添加
-  public function actionAdd(){
+ public function actionAdd(){
      $model = new PermissionForm();
      $request = \Yii::$app->request;
      //开启场景进行验证规则
@@ -104,66 +104,66 @@ class RbacController extends Controller{
    return  $this->render('role-index',['model'=>$model]);
 
    }
-   public function actionRoleAdd(){
-    $model= new RoleForm();
-    $authManager  =\Yii::$app->authManager;
-    $auth =$authManager->getPermissions();
-    //遍历
-     $arr2 =[];
-     foreach ($auth as $b){
-         $arr2[$b->name] = $b->description;
+ public function actionRoleAdd(){
+     $model= new RoleForm();
+     $authManager  =\Yii::$app->authManager;
+     $auth =$authManager->getPermissions();
+     //遍历
+      $arr2 =[];
+      foreach ($auth as $b){
+          $arr2[$b->name] = $b->description;
+      }
+     $request =new Request();
+     if($request->isPost){
+     $model->load($request->post());
+     if($model->validate()){
+     $authManager=\Yii::$app->authManager;
+     $role = new Role();
+     $role->name =$model->name;
+     $role->description = $model->description;
+     $authManager->add($role);
+     //var_dump($model->permission);exit;
+     foreach ($model->permission as  $v){
+      // 给角色赋予权限
+     $permission  =$authManager->getPermission($v);
+     $authManager->addChild($role,$permission);
      }
-    $request =new Request();
-    if($request->isPost){
-    $model->load($request->post());
-    if($model->validate()){
-    $authManager=\Yii::$app->authManager;
-    $role = new Role();
-    $role->name =$model->name;
-    $role->description = $model->description;
-    $authManager->add($role);
-    //var_dump($model->permission);exit;
-    foreach ($model->permission as  $v){
-     // 给角色赋予权限
-    $permission  =$authManager->getPermission($v);
-    $authManager->addChild($role,$permission);
-    }
-    \Yii::$app->session->setFlash('success','添加成功');
-    return  $this->redirect(['role-index']);
-    }
+     \Yii::$app->session->setFlash('success','添加成功');
+     return  $this->redirect(['role-index']);
+     }
 
     }
-   return $this->render('role-add',['model'=>$model,'arr2'=>$arr2]);
+     return $this->render('role-add',['model'=>$model,'arr2'=>$arr2]);
    }
 
     //角色的修改
  public function actionRoleEdit($id){
-    $model= new RoleForm();
-    $authManager  =\Yii::$app->authManager;
-    $auth =$authManager->getRole($id);
-    //获取角色关联的权限
-    $arr=$authManager->getPermissionsByRole($id);
-    $option= ArrayHelper::map($authManager->getPermissions(),'name','description');
-    //赋值数据回显到页面
-    $model->name = $auth->name;
-    $model->description = $auth->description;
-    //==========多选框回显遍历添加时勾选的权限在修改页面回显=========
-     $a=[];
-          foreach ($arr as $key=>$v){
-           $a[]=$key;
+     $model= new RoleForm();
+     $authManager  =\Yii::$app->authManager;
+     $auth =$authManager->getRole($id);
+     //获取角色关联的权限
+     $arr=$authManager->getPermissionsByRole($id);
+     $option= ArrayHelper::map($authManager->getPermissions(),'name','description');
+     //赋值数据回显到页面
+     $model->name = $auth->name;
+     $model->description = $auth->description;
+     //==========多选框回显遍历添加时勾选的权限在修改页面回显=========
+      $a=[];
+           foreach ($arr as $key=>$v){
+            $a[]=$key;
           }
-    $model->permission=$a;
-    $request =new Request();
-    if($request->isPost){
-    $model->load($request->post());
-    if($model->validate()){
-    $authManager=\Yii::$app->authManager;
+     $model->permission=$a;
+     $request =new Request();
+     if($request->isPost){
+     $model->load($request->post());
+     if($model->validate()){
+     $authManager=\Yii::$app->authManager;
      //$auth = new Role();
      $auth->name =$model->name;
      $auth->description = $model->description;
     //==============保存===================
      $authManager->update($id,$auth);
-   //去除角色的所有权限
+    //去除角色的所有权限
      $authManager->removeChildren($auth);
     //关联新的权限
     foreach ($model->permission as  $v) {
@@ -172,23 +172,23 @@ class RbacController extends Controller{
      $authManager->addChild($auth, $permission);
     }
     \Yii::$app->session->setFlash('success','修改成功');
-    return  $this->redirect(['role-index']);
+     return  $this->redirect(['role-index']);
      }
 
      }
      return $this->render('role-edit',['model'=>$model,'option'=>$option]);
     }
     //删除
-    public function actionRoleDelete($name){
-    $authManager= \Yii::$app->authManager;
-    $role= $authManager->getRole($name);
-    $authManager->remove($role);
+ public function actionRoleDelete($name){
+     $authManager= \Yii::$app->authManager;
+     $role= $authManager->getRole($name);
+     $authManager->remove($role);
 
-    }
-    //测试datatables插件
-   public function actionTable(){
-   return  $this->render('table');
-   }
+     }
+//     //测试datatables插件
+//    public function actionTable(){
+//    return  $this->render('table');
+//    }
 }
 
 

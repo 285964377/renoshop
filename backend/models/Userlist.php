@@ -3,84 +3,118 @@ namespace backend\models;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
-class  Userlist extends  ActiveRecord implements IdentityInterface {
-  public $password2;
-  public $description;
-
-
-public function rules()
+class  Userlist extends  ActiveRecord implements IdentityInterface
 {
+   //public $password;
+    public $description;
 
-    return [
-        [['username','sex','password','email','description'],'required','message'=>'不能是空'],
-        //['password','compare','compareAttribute'=>'password2','message'=>'两次密码必须一致'],
-        //['password2','compare','compareAttribute'=>'password','message'=>'密码必须一致']
+   public static function tableName(){
+       return 'userlist';
+   }
+    public function rules()
+    {
 
-    ];
-}
+        return [
+            [['username', 'sex', 'password', 'email', 'description'], 'required', 'message' => '不能是空'],
+            //['password','compare','compareAttribute'=>'password2','message'=>'两次密码必须一致'],
+            //['password2','compare','compareAttribute'=>'password','message'=>'密码必须一致']
 
-     /**
-      * Finds an identity by the given ID.
-      * @param string|int $id the ID to be looked for
-      * @return IdentityInterface the identity object that matches the given ID.
-      * Null should be returned if such an identity cannot be found
-      * or the identity is not in an active state (disabled, deleted, etc.)
-      */
-     public static function findIdentity($id)
-     {
-         return  self::findOne(['id'=>$id]);
-     }
+        ];
+    }
 
-     /**
-      * Finds an identity by the given token.
-      * @param mixed $token the token to be looked for
-      * @param mixed $type the type of the token. The value of this parameter depends on the implementation.
-      * For example, [[\yii\filters\auth\HttpBearerAuth]] will set this parameter to be `yii\filters\auth\HttpBearerAuth`.
-      * @return IdentityInterface the identity object that matches the given token.
-      * Null should be returned if such an identity cannot be found
-      * or the identity is not in an active state (disabled, deleted, etc.)
-      */
-     public static function findIdentityByAccessToken($token, $type = null)
-     {
-         // TODO: Implement findIdentityByAccessToken() method.
-     }
+    /**
+     * Finds an identity by the given ID.
+     * @param string|int $id the ID to be looked for
+     * @return IdentityInterface the identity object that matches the given ID.
+     * Null should be returned if such an identity cannot be found
+     * or the identity is not in an active state (disabled, deleted, etc.)
+     */
+    public static function findIdentity($id)
+    {
+        return self::findOne(['id' => $id]);
+    }
 
-     /**
-      * Returns an ID that can uniquely identify a user identity.
-      * @return string|int an ID that uniquely identifies a user identity.
-      */
-     public function getId()
-     {
+    /**
+     * Finds an identity by the given token.
+     * @param mixed $token the token to be looked for
+     * @param mixed $type the type of the token. The value of this parameter depends on the implementation.
+     * For example, [[\yii\filters\auth\HttpBearerAuth]] will set this parameter to be `yii\filters\auth\HttpBearerAuth`.
+     * @return IdentityInterface the identity object that matches the given token.
+     * Null should be returned if such an identity cannot be found
+     * or the identity is not in an active state (disabled, deleted, etc.)
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    /**
+     * Returns an ID that can uniquely identify a user identity.
+     * @return string|int an ID that uniquely identifies a user identity.
+     */
+    public function getId()
+    {
         return $this->id;
-     }
+    }
 
-     /**
-      * Returns a key that can be used to check the validity of a given identity ID.
-      *
-      * The key should be unique for each individual user, and should be persistent
-      * so that it can be used to check the validity of the user identity.
-      *
-      * The space of such keys should be big enough to defeat potential identity attacks.
-      *
-      * This is required if [[User::enableAutoLogin]] is enabled.
-      * @return string a key that is used to check the validity of a given identity ID.
-      * @see validateAuthKey()
-      */
-     public function getAuthKey()
-     {
-        return  $this->auth_key;
-     }
+    /**
+     * Returns a key that can be used to check the validity of a given identity ID.
+     *
+     * The key should be unique for each individual user, and should be persistent
+     * so that it can be used to check the validity of the user identity.
+     *
+     * The space of such keys should be big enough to defeat potential identity attacks.
+     *
+     * This is required if [[User::enableAutoLogin]] is enabled.
+     * @return string a key that is used to check the validity of a given identity ID.
+     * @see validateAuthKey()
+     */
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
 
-     /**
-      * Validates the given auth key.
-      *
-      * This is required if [[User::enableAutoLogin]] is enabled.
-      * @param string $authKey the given auth key
-      * @return bool whether the given auth key is valid.
-      * @see getAuthKey()
-      */
-     public function validateAuthKey($authKey)
-     {
-         return $this->getAuthKey()==$authKey;
-     }
- }
+    /**
+     * Validates the given auth key.
+     *
+     * This is required if [[User::enableAutoLogin]] is enabled.
+     * @param string $authKey the given auth key
+     * @return bool whether the given auth key is valid.
+     * @see getAuthKey()
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() == $authKey;
+    }
+
+    //获取该用户的菜单
+    public function getMenus()
+    {
+        $menuItems =[];
+        //获取一级菜单
+        $menus = Menu::find()->where(['parent_id'=>0])->all();
+        foreach ($menus as $menu) {
+        //获取该一级分类的子分类
+        $children = Menu::find()->where(['parent_id'=>$menu->id])->all();
+        $items=[];
+        //遍历一级菜单的子分类
+        foreach ($children as $child){
+        //判断用户有那些权限 没有的权限不会显示在网页上面
+         if(\Yii::$app->user->can($child->url)){
+             //子分类的名字 和 url 放入数组中
+             $items[] = ['label'=>$child->label,'url' =>[$child->url]];
+         }
+
+
+        }
+        //存入一级菜单一级菜单分类 和子分类 子分类是$items
+        //没有子级菜单的就不显示了
+        if($items){
+        $menuItems[] = ['label' => $menu->label,'items'=>$items];
+        }
+
+
+        }
+        return $menuItems;
+    }
+}

@@ -58,7 +58,7 @@ $js = <<<JS
             // $("#goods-logo").val(response.url);
             $.getJSON('{$save}',{"id":$id,"url":response.url},function(date) {
                 
-              html+='<tr id="'+date.id+'" str="{$save}" >\
+              html+='<tr id="'+date.id+'" str="{$url}" >\
               <td><img src="'+response.url+'" width="200px" ></td><td>{$y}</td>\
              </tr>';
               

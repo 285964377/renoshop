@@ -69,8 +69,8 @@ class ArticleController extends Controller
  public function actionDelete($id){
     $Article=Article::findOne(['id'=>$id]);
     $Article::updateAll(['status'=>-1],['id'=>$id]);
-
     }
+    //修改
  public function actionEdit($id){
     $modle =Article::findOne(['id'=>$id]);
     $detail = new ArticleDetail();//文章详情实例化
@@ -90,15 +90,16 @@ class ArticleController extends Controller
     //保存到文章详情表
     $detail->save();
     }
-      //添加成功则给出提示信息
+     //添加成功则给出提示信息
      \Yii::$app->session->setFlash('success','修改成功');
      return $this->redirect(['index']);
     }
-     //数据遍历用于文章分类
+    //数据遍历用于文章分类
     $Article_category=ArticleCategory::find()->all();
     //数组 id  和name
     $option=ArrayHelper::map($Article_category,'id','name');
     //var_dump($option);exit;
     return $this->render('edit',['modle'=>$modle,'option'=>$option]);
     }
+
 }

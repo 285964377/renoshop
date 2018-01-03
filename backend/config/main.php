@@ -21,6 +21,8 @@ return [
             'identityClass' => 'backend\models\Userlist',
             'enableAutoLogin' => true,//默认开启的自动登录
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+           //配置跳转
+            'loginUrl'=>['userlist/login']
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend

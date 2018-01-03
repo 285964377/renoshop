@@ -2,13 +2,14 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Brand;
 use yii\helpers\Json;
 use yii\web\Request;
 use yii\web\UploadedFile;
 
 class BrandController extends \yii\web\Controller
-{   public $enableCsrfValidation=false;
+{   public $enableCsrfValidation=false;//关闭跨域式..
     //品牌列表展示
  public function actionIndex()
     {
@@ -17,7 +18,7 @@ class BrandController extends \yii\web\Controller
     }
     //ajax文件上传处理
  public function actionUploader(){
-   //标签名字而不是Model 了 隐藏域的name= file 所以写file
+    //标签名字而不是Model 了 隐藏域的name= file 所以写file
     $img = UploadedFile::getInstanceByName('file');
     $FimagName= '/upload/'.uniqid().'.'.$img->extension;
     //保存路径
@@ -30,21 +31,20 @@ class BrandController extends \yii\web\Controller
     }
  public function actionAdd()
     {
-     $model = new Brand();
-     $request = new Request();
-     if($request->isPost) {
-       //加载
-     $model->load($request->post());
-     if($model->validate()) {
-
-      }
+    $model = new Brand();
+    $request = new Request();
+    if($request->isPost) {
+      //加载
+    $model->load($request->post());
+    if($model->validate()) {
+     }
      //保存
-     $model->save();
-     //提示信息
+    $model->save();
+    //提示信息
     \Yii::$app->session->setFlash('success', '添加成功');
-     return $this->redirect(['index']);
-      }
-     return $this->render('add', ['modle' => $model]);
+    return $this->redirect(['index']);
+     }
+    return $this->render('add', ['modle' => $model]);
     }
      //修改方法
  public function actionEdit($id){
@@ -67,6 +67,13 @@ class BrandController extends \yii\web\Controller
     $b::updateAll(['status'=>-1],['id'=>$id]);
       // \Yii::$app->session->setFlash('success', '删除成功');
       }
-     //远程测试跨域
+  public function behaviors()
+  {
+      return [
+          'rbac'=>[
+           'class'=>RbacFilter::className()
+          ]
+      ];
+  }
 
- }
+}

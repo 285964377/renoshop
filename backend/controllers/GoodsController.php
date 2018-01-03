@@ -49,35 +49,41 @@ class GoodsController extends Controller{
      $img = UploadedFile::getInstanceByName('file');
      $FimagName = '/upload/' . uniqid() . '.' . $img->extension;
      if ($img->saveAs(\Yii::getAlias('@webroot') . $FimagName, 0)) {
-           ///将图片上传到七牛云
-//   $accessKye ='qVKexGMs3BO60lgfBFQcnAiZpVym9tJz2k2Qsz8g';
-//   $secretKye='T8ffPYvx8pG0WuLZ8W76gVYSDZi2-2r47muh-_Lu';
-//   $bucket='php0825';
-//   $domain='www.58yq.cn';
-//   $auth=new Auth($accessKye,$secretKye);
-           //生成上传 Token
-//   $token=$auth->uploadToken($bucket);
-//   //$fileName='/upload/1.jpg';
-//   $filePath= \Yii::getAlias('@webroot').$FimagName;
-//   //上传到七牛保存的文件名
-//   $key =$FimagName;
-//   $uploadMgr=new UploadManager();
-//   //调用outfile方法进行文件上传
-//   list($ret,$err)=$uploadMgr->putFile($token,$key,$filePath);
-//   if($err !==null){
-//       //如果错误就打印
-//       return Json::encode(['error'=>1]);
-//   // var_dump($err);
-//   }else{
-//       $url="http://{$domain}/{$key}";
-//       return Json::encode(['url'=>$url]);
+         ///将图片上传到七牛云
+         $accessKye ='5P9pKobraO45Wy2rKlmxiY1mJvH9I8YtpYRAsUMY';
+         $secretKye='T8ffPYvx8pG0WuLZ8W76gVYSDZi2-2r47muh-_Lu';
+         $bucket='php0825';
+         //七牛云上的域名地址
+         $domain='p1gsspstg.bkt.clouddn.com';
+         //实例化
+         $auth=new Auth($accessKye,$secretKye);
 
-           //如果上传成功则返回 json 数据方便回显
-           return Json::encode(['url' => $FimagName]);
-       } else {
-           //如果没有上传上个则返回出错误信息
-           return Json::encode(['error' => 1]);
-       }
+         //生成上传 Token
+         $token=$auth->uploadToken($bucket);
+
+         //$fileName='/upload/1.jpg';
+         $filePath= \Yii::getAlias('@webroot').$FimagName;
+
+         //上传到七牛保存的文件名
+         $key =$FimagName;
+         $uploadMgr=new UploadManager();
+         //调用outfile方法进行文件上传
+         list($ret,$err)=$uploadMgr->putFile($token,$key,$filePath);
+         if($err !==null){
+             //如果上传出错就将打出其错误信息
+             return Json::encode(['error'=>1]);
+             // var_dump($err);
+         }else{
+             //拼接URL地址
+             $url="http://{$domain}/{$key}";
+             return Json::encode(['url'=>$url]);
+             //return Json::encode(['url'=>$FimagName]);
+         }
+
+     }else{
+         //上传失败
+         return Json::encode(['error'=>1]);
+     }
    }
    public function actionAdd(){
      //实例化
@@ -105,10 +111,9 @@ class GoodsController extends Controller{
          $count->day= $date;
      }
      $st='00000';
-     //保存不变的count = 1
+
      $count->save();
     //$model->sn=date('Ymd').str_pad($count->count,6,0,0);
-    ////拼接时间
      $model->sn=date('Ymd').$st+$count->count;
      // var_dump($model->sn);exit;
     //添加时间保存
@@ -155,7 +160,7 @@ class GoodsController extends Controller{
                 'class' => 'common\widgets\ueditor\UeditorAction',
                 'config' => [
                     //上传图片配置
-                    'imageUrlPrefix' => "", /* 图片访问路径前缀 */
+                    'imageUrlPrefix' => "http://www.admin.yiishop.com", /* 图片访问路径前缀 */
                     'imagePathFormat' => "/image/{yyyy}{mm}{dd}/{time}{rand:6}", /* 上传保存路径,可以自定义保存路径和文件名格式 */
                 ]
             ]

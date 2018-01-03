@@ -34,14 +34,12 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => '商品首页', 'url' => ['/goods/index']],
-        ['label'=>'注销','url'=>['userlist/logout']]
-    ];
+    $menuItems =[];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => '登录', 'url' => ['/userlist/login']];
 
     } else {
+        $menuItems=Yii::$app->user->identity->getMenus();
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(

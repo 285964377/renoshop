@@ -61,7 +61,7 @@
         <td><?=date('Y-m-d H:i',($g->create_time))?></td>
         <td>
             <?=yii\bootstrap\Html::a('相册',['goods/gallery','id'=>$g->id],['class'=>'btn btn-default glyphicon glyphicon-picture'])?>
-            <?=yii\bootstrap\Html::a('修改',['goods/edit'],['class'=>'btn btn-default glyphicon  glyphicon glyphicon-wrench'])?>
+            <?=yii\bootstrap\Html::a('修改',['goods/edit','id'=>$g->id],['class'=>'btn btn-default glyphicon  glyphicon glyphicon-wrench'])?>
             <?=yii\bootstrap\Html::a('删除',null,['class'=>'btn btn-default glyphicon  glyphicon-trash'])?>
 
         </td>

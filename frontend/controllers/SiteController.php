@@ -1,8 +1,14 @@
 <?php
 namespace frontend\controllers;
 
+use backend\models\GoodsGallery;
+use backend\models\GoodsIntro;
+use frontend\models\Brand;
+use frontend\models\Goods;
+use frontend\models\GoodsCategory;
 use Yii;
 use yii\base\InvalidParamException;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -17,7 +23,7 @@ use frontend\models\ContactForm;
  * Site controller
  */
 class SiteController extends Controller
-{
+{ public  $enableCsrfValidation=false;
     /**
      * @inheritdoc
      */
@@ -72,8 +78,47 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
         return $this->render('index');
     }
+
+    public function actionGoods($cate_id){
+       //判断是二级分类还是三级分类
+      $cate =\backend\models\GoodsCategory::findOne(['id'=>$cate_id]);
+       if($cate->depth==1){
+           //三级分类
+           $ids = [$cate_id];
+       }else{
+               //一级分类
+    //           //二级分类 2 = >{3, 4 }
+    //           //获取该二级分类下面的三级分类
+    //           $categorys = Goods::find()->where(['parent_id'=>$cate_id])->all();
+
+           $categorys= $cate->children()->select('id')->andWhere(['depth'=>2])->asArray()->all();
+
+           $ids= ArrayHelper::map($categorys,'id','id');
+           //3,4
+           //在根据三级分类id查找商品
+
+
+       }
+        $goods =Goods::find()->where(['in','goods_category_id',$ids])->all();
+
+
+        return  $this->render('list',['goods'=>$goods]);
+
+    }
+    public function actionContent($id){
+        $content = GoodsIntro::find()->where(['goods_id'=>$id])->one();
+        $goods = Goods::find()->where(['id'=>$id])->all();
+        $photh = GoodsGallery::find()->where(['goods_id'=>$id])->all();
+        foreach ($photh  as $pt){
+
+        }
+//        var_dump($content);exit;
+        return $this->render('goods',['content'=>$content,'goods'=>$goods,'photh'=>$photh,'pt'=>$pt]);
+    }
+
 
     /**
      * Logs in a user.

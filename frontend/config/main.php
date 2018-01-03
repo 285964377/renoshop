@@ -11,12 +11,14 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'layout'=>false,
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            //认证接口类
+            'identityClass' => 'frontend\models\Member',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
@@ -36,6 +38,13 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'sms'=>[
+            'class'=>\frontend\components\Sms::className(),
+             'ak'=>'LTAIr9ClLepnffaw',
+            'sk'=>'YUeF0YUxqMlGh6Dhf5w6zsbmrMipxQ',
+            'sign'=>'叶哥书店',
+            'template'=>'SMS_120130244'
+        ]
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
