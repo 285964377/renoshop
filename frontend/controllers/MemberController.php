@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 use Aliyun\DySDKLite\SignatureHelper;
+use frontend\models\Cart;
 use frontend\models\LoginForm;
 use frontend\models\Member;
 use yii\web\Controller;
@@ -44,12 +45,37 @@ class MemberController extends Controller{
          // var_dump($model);
          $request = new Request();
          if($request->isPost){
-
          $model->load($request->post(),'');
-             //var_dump($model);exit;
 
          if($model->login()){
+          // 查询cookie
+          $cookies = \Yii::$app->request->cookies;
+          //取值
+          $va = $cookies->getValue('cart');
+          //反序列化
+          $cart = unserialize($va);
+         //var_dump($cart);exit;
+         //遍历以k value 形式
+         foreach ($cart as $k=>$va){
+          //查询的时候赋值 goodid =商品中的id  memeberId 是==会员登录ID
+          $info = Cart::findOne(['goods_id'=>$k,'member_id'=>\Yii::$app->user->getId()]);
+          if($info){
+          //如果存在的话数量 += value值
+          $num = $info->amount += $va;
+          //并且修改数据库中的值 修改amount 条件  goods_id 赋值等于 遍历中的值$k
+          Cart::updateAll(['amount'=>$num],['goods_id'=>$k,'member_id'=>\Yii::$app->user->getId()]);
+          }else{
+          //如果没有的话 就新增一条商品数据
+          $models = new Cart();
+          $models->goods_id = $k ;
+          // var_dump($models);exit;
+          $models->amount = $va;
+           // var_dump($models);exit;
+          $models->member_id =\Yii::$app->user->getId();
+          $models->save();
+            }
 
+               }
           return $this->redirect(['center']);
 
          }

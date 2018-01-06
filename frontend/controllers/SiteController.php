@@ -169,9 +169,9 @@ class SiteController extends Controller
           $model->goods_id=$goods_id;
           $model->save();
          }else{
-//          $mode->amount +=$amount;
-//          $mode->save();
-             Cart::updateAll(['amount'=>$mode->amount+$amount],['goods_id'=>$goods_id,'member_id'=>Yii::$app->user->id]);
+//       $mode->amount +=$amount;
+//       $mode->save();
+          Cart::updateAll(['amount'=>$mode->amount+$amount],['goods_id'=>$goods_id,'member_id'=>Yii::$app->user->id]);
          }
 
       }
@@ -197,16 +197,15 @@ class SiteController extends Controller
          $ids = [];
          $cart = [];
          foreach ($models as $model) {
-             //将得到得goods_id放入数组中
-             $ids[] = $model->goods_id;
-             //模拟一个数组显示页面用
-             $cart[$model->goods_id] = $model->amount;
-
+         //将得到得goods_id放入数组中
+         $ids[] = $model->goods_id;
+         //模拟一个数组显示页面用
+         $cart[$model->goods_id] = $model->amount;
          }
      }
-         $models = Goods::find()->where(['in', 'id', $ids])->all();
-         //var_dump($models);exit;
-         return $this->renderPartial('cart', ['models' => $models, 'cart' => $cart]);
+     $models = Goods::find()->where(['in', 'id', $ids])->all();
+     //var_dump($models);exit;
+     return $this->renderPartial('cart', ['models' => $models, 'cart' => $cart]);
   }
 
   //添加商品 + - 或则中间填写
@@ -217,6 +216,7 @@ class SiteController extends Controller
       //是否登录
       if(Yii::$app->user->isGuest){
           //没登录情况存cookie
+         ////Yii::$app->request->cookies主要负责读取
           $cookies = Yii::$app->request->cookies;
           if($cookies->has('cart')){
           $value = $cookies->getValue('cart');
@@ -225,21 +225,24 @@ class SiteController extends Controller
           }else{
               $cart = [];
           }
+          //Yii::$app->response->cookies主要负责创建
           $cart[$goods_id]=$amount;
           $cookies = Yii::$app->response->cookies;
           $cookie = new Cookie();
+          //创建一个名为cart
           $cookie->name = 'cart';
           $cookie->value = serialize($cart);
           //var_dump($cookie);
           $cookies->add($cookie);
 
       }else{
+          //登录状态下 修改 值需要 数量 += 即可 条件中的是赋值修改
           $id = Yii::$app->user->getId();
           //修改记录amount+1
           Cart::updateAll(['amount'=>$amount],['goods_id'=>$goods_id,'member_id'=>$id,]);
-             // 表示该会员已添加过该商品，只需要修改纪录即可
-              //$model->amount += $amount;
-              //$model->save();
+          //$model->amount += $amount;
+          //return $this->redirect(['site/add-to-cart']);
+          //$model->save();
       }
 
   }
@@ -270,6 +273,7 @@ class SiteController extends Controller
              //登录情况下操作数据库删除
           $user_id = Yii::$app->user->getId();
            Cart::deleteAll(['goods_id'=>$id,'member_id'=>$user_id]);
+
 
       }
 
