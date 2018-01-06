@@ -120,8 +120,9 @@ class GoodsController extends Controller{
      $model->create_time= time();
      $model->save();
      //商品内容详情保存赋值
-     $Intor->goods_id= $model->id;
+     $Intor->goods_id=$model->id;
      $Intor->content=$model->content;
+     //var_dump($Intor);exit;
     //保存
    //$Goods->save();
      $Intor->save();
