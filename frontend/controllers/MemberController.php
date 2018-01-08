@@ -11,19 +11,19 @@ use yii\web\Request;
 class MemberController extends Controller{
     public $enableCsrfValidation=false;
 
- public function actionIndex(){
+    public function actionIndex(){
 
 
   }
   public function actionAdd(){
 
      $request = new Request();
-    // $post =$request->post();
-    // var_dump($post);
+     // $post =$request->post();
+     // var_dump($post);
      $model = new Member();
      if($request->isPost){
 
-    $model->load($request->post(),'');
+     $model->load($request->post(),'');
      $created_at= time();
      $model->created_at= $created_at;
      if($model->validate()){
@@ -39,74 +39,74 @@ class MemberController extends Controller{
 
     return $this->render('regist');
   }
-    public function actionLogin(){
-         //登陆表单
-         $model = new LoginForm();
-         // var_dump($model);
-         $request = new Request();
-         if($request->isPost){
-         $model->load($request->post(),'');
-         if($model->login()){
-         //查询cookie
-         $cookies = \Yii::$app->request->cookies;
-         //没登录情况存cookie
-         if($cookies->has('cart')){
-         $value = $cookies->getValue('cart');
-         //反序列化
-         $cart = unserialize($value);
-          }else{
+  public function actionLogin(){
+     //登陆表单
+     $model = new LoginForm();
+     // var_dump($model);
+     $request = new Request();
+     if($request->isPost){
+     $model->load($request->post(),'');
+     if($model->login()){
+     //查询cookie
+     $cookies = \Yii::$app->request->cookies;
+     //没登录情况存cookie
+     if($cookies->has('cart')){
+     $value = $cookies->getValue('cart');
+     //反序列化
+     $cart = unserialize($value);
+      }else{
          $cart = [];
          }
-         //var_dump($cart);exit;
-         //var_dump($cart);exit;
-         //遍历以k value 形式
-         foreach ($cart as $k=>$va){
-          //查询的时候赋值 goodid =商品中的id  memeberId 是==会员登录ID
-          $info = Cart::findOne(['goods_id'=>$k,'member_id'=>\Yii::$app->user->getId()]);
-          if($info){
-          //如果存在的话数量 += value值
-          $num = $info->amount += $va;
-          //并且修改数据库中的值 修改amount 条件  goods_id 赋值等于 遍历中的值$k
-          Cart::updateAll(['amount'=>$num],['goods_id'=>$k,'member_id'=>\Yii::$app->user->getId()]);
-          }else{
-          //如果没有的话 就新增一条商品数据
-          $models = new Cart();
-          $models->goods_id = $k ;
-          // var_dump($models);exit;
-          $models->amount = $va;
-           // var_dump($models);exit;
-          $models->member_id =\Yii::$app->user->getId();
-          $models->save();
-            }
+      //var_dump($cart);exit;
+      //var_dump($cart);exit;
+      //遍历以k value 形式
+      foreach ($cart as $k=>$va){
+      //查询的时候赋值 goodid =商品中的id  memeberId 是==会员登录ID
+      $info = Cart::findOne(['goods_id'=>$k,'member_id'=>\Yii::$app->user->getId()]);
+      if($info){
+      //如果存在的话数量 += value值
+      $num = $info->amount += $va;
+      //并且修改数据库中的值 修改amount 条件  goods_id 赋值等于 遍历中的值$k
+      Cart::updateAll(['amount'=>$num],['goods_id'=>$k,'member_id'=>\Yii::$app->user->getId()]);
+      }else{
+      //如果没有的话 就新增一条商品数据
+      $models = new Cart();
+      $models->goods_id = $k ;
+      // var_dump($models);exit;
+      $models->amount = $va;
+       // var_dump($models);exit;
+      $models->member_id =\Yii::$app->user->getId();
+      $models->save();
+       }
 
-               }
-          return $this->redirect(['center']);
+       }
+      return $this->redirect(['center']);
 
-         }
+      }
 
-        }
-         return $this->render('login');
+      }
+      return $this->render('login');
     }
     //是否登录验证
-    public function actionCenter(){
-        //如果没有登录则提示未登录返回到登录页面
-        if(\Yii::$app->user->isGuest){
-            echo "未成功";
+  public function actionCenter(){
+     //如果没有登录则提示未登录返回到登录页面
+     if(\Yii::$app->user->isGuest){
+         echo "未成功";
 
-        }else{
-            //登录成功的话
-            return $this->redirect(['site/index']);
-        }
+     }else{
+         //登录成功的话
+         return $this->redirect(['site/index']);
+     }
 
     }
     //注销
-    public function actionLogout(){
-        \Yii::$app->user->logout();
+  public function actionLogout(){
+       \Yii::$app->user->logout();
 
-        return $this->redirect(['login']);
+       return $this->redirect(['login']);
     }
     //电话号码验证存入redis
-    public function actionSms($phone){
+  public function actionSms($phone){
      //正则表达式 电话号码验证
 
       $code=rand(1000,9999);
