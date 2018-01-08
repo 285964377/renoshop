@@ -31,7 +31,7 @@ class GoodsController extends Controller{
       $goods->where(['like','name',$name]);
       }
       if($sn){
-     $goods->andWhere(['like','sn',$sn]);
+      $goods->andWhere(['like','sn',$sn]);
       }
       if($shop_price){
       $goods->andWhere(['like','shop_price',$shop_price]);
@@ -70,14 +70,14 @@ class GoodsController extends Controller{
          //调用outfile方法进行文件上传
          list($ret,$err)=$uploadMgr->putFile($token,$key,$filePath);
          if($err !==null){
-             //如果上传出错就将打出其错误信息
-             return Json::encode(['error'=>1]);
-             // var_dump($err);
+           //如果上传出错就将打出其错误信息
+           return Json::encode(['error'=>1]);
+           // var_dump($err);
          }else{
-             //拼接URL地址
-             $url="http://{$domain}/{$key}";
-             return Json::encode(['url'=>$url]);
-             //return Json::encode(['url'=>$FimagName]);
+           //拼接URL地址
+           $url="http://{$domain}/{$key}";
+           return Json::encode(['url'=>$url]);
+           //return Json::encode(['url'=>$FimagName]);
          }
 
      }else{

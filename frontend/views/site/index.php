@@ -28,9 +28,7 @@
 			<div class="search fl">
 				<div class="search_form">
 					<div class="form_left fl"></div>
-					<form action="" name="serarch" method="get" class="fl">
-						<input type="text" class="txt" value="请输入商品关键字" /><input type="submit" class="btn" value="搜索" />
-					</form>
+					<?php require 'serarch.php'?>
 					<div class="form_right fl"></div>
 				</div>
 				
@@ -323,6 +321,7 @@
 				<!-- 疯狂抢购 start-->
 				<div class="crazy">
 					<ul>
+
 						<li>
 							<dl>
 								<dt><a href=""><img src="/images/crazy1.jpg" alt="" /></a></dt>
@@ -393,6 +392,7 @@
 				<!-- 推荐商品 atart -->
 				<div class="recommend none">
 					<ul>
+
 						<li>
 							<dl>
 								<dt><a href=""><img src="/images/recommend1.jpg" alt="" /></a></dt>
@@ -400,6 +400,7 @@
 								<dd><span>售价：</span><strong> ￥139.00</strong></dd>
 							</dl>
 						</li>
+
 						<li>
 							<dl>
 								<dt><a href=""><img src="/images/recommend2.jpg" alt="" /></a></dt>
@@ -428,10 +429,12 @@
 			<h2><strong>网站首发</strong></h2>
 			<div class="sidebar_wrap">
 				<dl class="first">
+
 					<dt class="fl"><a href=""><img src="/images/viewsonic.jpg" alt="" /></a></dt>
 					<dd><strong><a href="">ViewSonic优派N710 </a></strong> <em>首发</em></dd>
 					<dd>苹果iphone 5免费送！攀高作为全球智能语音血压计领导品牌，新推出的黑金刚高端智能电子血压计，改变传统测量方式让血压测量迈入一体化时代。</dd>
 				</dl>
+
 
 				<dl>
 					<dt class="fr"><a href=""><img src="/images/samsung.jpg" alt="" /></a></dt>
@@ -489,95 +492,16 @@
 				<div class="goodslist_wrap">
 					<div>
 						<ul>
+                            <?php foreach ($goodss as $g): ?>
 							<li>
 								<dl>
-									<dt><a href=""><img src="/images/hpG4.jpg" alt="" /></a></dt>
-									<dd><a href="">惠普G4-1332TX 14英寸笔</a></dd>
-									<dd><span>售价：</span> <strong>￥2999.00</strong></dd>
+									<dt><a href=""><img src="<?=$g->logo?>" alt="" /></a></dt>
+									<dd><a href=""><?=$g->name?></a></dd>
+									<dd><span>售价：</span> <strong><?=$g->shop_price?></strong></dd>
 								</dl>
 							</li>
+                            <?php endforeach; ?>
 
-							<li>
-								<dl>
-									<dt><a href=""><img src="/images/thinkpad e420.jpg" alt="" /></a></dt>
-									<dd><a href="">ThinkPad E42014英寸笔..</a></dd>
-									<dd><span>售价：</span> <strong>￥4199.00</strong></dd>
-								</dl>
-							</li>
-
-							<li>
-								<dl>
-									<dt><a href=""><img src="/images/acer4739.jpg" alt="" /></a></dt>
-									<dd><a href="">宏碁AS4739-382G32Mnk</a></dd>
-									<dd><span>售价：</span> <strong>￥2799.00</strong></dd>
-								</dl>
-							</li>
-
-							<li>
-								<dl>
-									<dt><a href=""><img src="/images/samsung6800.jpg" alt="" /></a></dt>
-									<dd><a href="">三星Galaxy Tab P6800.</a></dd>
-									<dd><span>售价：</span> <strong>￥4699.00</strong></dd>
-								</dl>
-							</li>
-
-							<li>
-								<dl>
-									<dt><a href=""><img src="/images/lh531.jpg" alt="" /></a></dt>
-									<dd><a href="">富士通LH531 14.1英寸笔记</a></dd>
-									<dd><span>售价：</span> <strong>￥2189.00</strong></dd>
-								</dl>
-							</li>
-
-							<li>
-								<dl>
-									<dt><a href=""><img src="/images/qinghuax2.jpg" alt="" /></a></dt>
-									<dd><a href="">清华同方精锐X2笔记本 </a></dd>
-									<dd><span>售价：</span> <strong>￥2499.00</strong></dd>
-								</dl>
-							</li>
-						</ul>
-					</div>
-					
-					<div class="none">
-						<ul>
-							<li>
-								<dl>
-									<dt><a href=""><img src="/images/hpG4.jpg" alt="" /></a></dt>
-									<dd><a href="">惠普G4-1332TX 14英寸笔</a></dd>
-									<dd><span>售价：</span> <strong>￥2999.00</strong></dd>
-								</dl>
-							</li>
-
-							<li>
-								<dl>
-									<dt><a href=""><img src="/images/qinghuax2.jpg" alt="" /></a></dt>
-									<dd><a href="">清华同方精锐X2笔记本 </a></dd>
-									<dd><span>售价：</span> <strong>￥2499.00</strong></dd>
-								</dl>
-							</li>
-							
-						</ul>
-					</div>
-
-					<div class="none">
-						<ul>
-							<li>
-								<dl>
-									<dt><a href=""><img src="/images/thinkpad e420.jpg" alt="" /></a></dt>
-									<dd><a href="">ThinkPad E42014英寸笔..</a></dd>
-									<dd><span>售价：</span> <strong>￥4199.00</strong></dd>
-								</dl>
-							</li>
-
-							<li>
-								<dl>
-									<dt><a href=""><img src="/images/acer4739.jpg" alt="" /></a></dt>
-									<dd><a href="">宏碁AS4739-382G32Mnk</a></dd>
-									<dd><span>售价：</span> <strong>￥2799.00</strong></dd>
-								</dl>
-							</li>
-						</ul>
 					</div>
 
 				</div>

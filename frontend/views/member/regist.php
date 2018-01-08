@@ -164,7 +164,7 @@
          $.get("<?=\yii\helpers\Url::to(['member/sms'])?>",{phone:phone},function (data) {
              if(data=='true'){
                 //短信推送成功
-               console.debug('发送成功');
+                 alert('发送成功');
              }else {
                  alert(data);
              }
@@ -210,12 +210,7 @@
 
 
                     },
-                    tel{
-                        required: true,
-                        minlength:11;
 
-
-                    }
                     confirm_password: {
                         required: true,
                         minlength: 5,
@@ -226,6 +221,10 @@
                         email: true
 
                     },
+                    tel:{
+                        required: true,
+                        minlength:11.
+                    }
                     topic: {
                         required: "#newsletter:checked",
                         minlength: 2
@@ -239,6 +238,10 @@
                         required: "请输入用户名",
                         minlength: "用户名必需由两个字母组成"
                     },
+                    tel:{
+                        required: "请输入手机号",
+                        minlength:"长度不能小于11"
+                    }
                     password: {
                         required: "请输入密码",
                         minlength: "密码长度不能小于 5 个字母"

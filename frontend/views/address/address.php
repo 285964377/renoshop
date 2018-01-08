@@ -32,9 +32,7 @@
 			<div class="search fl">
 				<div class="search_form">
 					<div class="form_left fl"></div>
-					<form action="" name="serarch" method="get" class="fl">
-						<input type="text" class="txt" value="请输入商品关键字" /><input type="submit" class="btn" value="搜索" />
-					</form>
+                    <?php require 'serarch.php'?>
 					<div class="form_right fl"></div>
 				</div>
 				
@@ -449,21 +447,21 @@
 		<div class="content fl ml10">
 			<div class="address_hd">
 				<h3>收货地址薄</h3>
-
+               <?php  foreach ($arr as $v):  ?>
 				<dl>
-					<dt></dt>
+					<dt><?=$v->name.''.$v->phone.''.$v->cmbProvince.''.$v->cmbCity.''.$v->cmbArea?></dt>
 					<dd>
 						<a href="">修改</a>
-						<a href="">删除</a>
-						<a href="">设为默认地址</a>
+						<a href="<?=\yii\helpers\Url::to(['address/delete','id'=>$v->id])?>">删除</a>
+						<a href="<?=\yii\helpers\Url::to(['address/default','id'=>$v->id,'is_default'=>$v->is_default])?>"><?= $v->is_default==1?'默认地址':'设置为默认地址'?></a>
 					</dd>
 				</dl>
-
+             <?php endforeach; ?>
 			</div>
 
 			<div class="address_bd mt10">
 				<h4>新增收货地址</h4>
-				<form action="<?=\yii\helpers\Url::to(['address/add'])?>" name="address_form" method="post">
+				<form action="<?=\yii\helpers\Url::to(['address/add'])?>"  method="post">
 						<ul>
 							<li>
 								<label for=""><span>*</span>收货人：</label>
@@ -490,20 +488,21 @@
 							</li>
 							<li>
 								<label for="">&nbsp;</label>
-								<input type="checkbox" name="is_default" class="check" />设为默认地址
+								<input type="checkbox" name="is_default" class="check" value="1"/>设为默认地址
 							</li>
 							<li>
 								<label for="">&nbsp;</label>
-                                <input type="hidden" name="r" value="address/add"/>
+
 								<input type="submit" name="" class="btn" value="保存" />
 							</li>
 						</ul>
-					</form>
+
 			</div>
 
 		</div>
 		<!-- 右侧内容区域 end -->
 	</div>
+        </form>
 	<!-- 页面主体 end-->
 
 	<div style="clear:both;"></div>

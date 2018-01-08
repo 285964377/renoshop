@@ -60,9 +60,6 @@ class ArticleCategoryController extends Controller {
  public function actionDelete($id){
      //页面点击之后数据调用到这里之后则修改其状态值为-1代表删除
      $Atricle= ArticleCategory::findOne(['id'=>$id]);
-     //这里这样写也实现了此功能
-     //$Atricle= Article_category::updateAll(['status'=>-1],['id'=>$id]);
-     //以防万一我还是这样写的
      $Atricle::updateAll(['status'=>-1],['id'=>$id]);
    }
 }

@@ -27,7 +27,7 @@ class MemberController extends Controller{
      $created_at= time();
      $model->created_at= $created_at;
      if($model->validate()){
-
+     // var_dump($model);exit;
      $model->password_hash=\Yii::$app->security->generatePasswordHash($model->password_hash);
      //var_dump($user);
      $model->save();
@@ -59,8 +59,6 @@ class MemberController extends Controller{
          $cart = [];
          }
       //var_dump($cart);exit;
-      //var_dump($cart);exit;
-      //遍历以k value 形式
       foreach ($cart as $k=>$va){
       //查询的时候赋值 goodid =商品中的id  memeberId 是==会员登录ID
       $info = Cart::findOne(['goods_id'=>$k,'member_id'=>\Yii::$app->user->getId()]);
@@ -170,9 +168,9 @@ class MemberController extends Controller{
 //            $accessKeySecret,
 //            "dysmsapi.aliyuncs.com",
 //            array_merge($params, array(
-//                "RegionId" => "cn-hangzhou",
-//                "Action" => "SendSms",
-//                "Version" => "2017-05-25",
+//           "RegionId" => "cn-hangzhou",
+//           "Action" => "SendSms",
+//           "Version" => "2017-05-25",
 //            ))
 //        );
 //   var_dump($content);

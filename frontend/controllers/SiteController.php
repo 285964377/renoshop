@@ -82,10 +82,17 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionIndex()
-    {
+  public function actionIndex(){
 
-    return $this->render('index');
+    $request =Yii::$app->request;
+    $name = empty($request->get('name'))?'':$request->get('name');
+    $goodss = Goods::find();
+    //存在则执行搜索条件
+    if($name){
+    $goodss->where(['like','name',$name]);
+    }
+    $goodss = $goodss->all();
+    return $this->render('index',['goodss'=>$goodss]);
     }
 
  public function actionGoods($cate_id){
@@ -104,7 +111,6 @@ class SiteController extends Controller
            //3,4
            //在根据三级分类id查找商品
 
-
        }
       $goods =Goods::find()->where(['in','goods_category_id',$ids])->all();
 
@@ -113,7 +119,9 @@ class SiteController extends Controller
     }
  public function actionContent($id){
      $content = GoodsIntro::find()->where(['goods_id'=>$id])->one();
-     $goods = Goods::find()->where(['id'=>$id])->all();
+     $request = Yii::$app->request;
+     $name = empty($request->get('name'))?'':$request->get('name');
+     $goods = Goods::find();
      $photh = GoodsGallery::find()->where(['goods_id'=>$id])->all();
                       //修改浏览次数        并且是根据商品的id修改
      Goods::updateAllCounters(['view_times'=>1],['id'=>$id]);
@@ -123,9 +131,19 @@ class SiteController extends Controller
      }
      foreach ($goods as $gds){
 
-       }
-     //var_dump($pt);exit;
-     //var_dump($content);exit;
+     }
+//      $goodss = Goods::find();
+//    //存在则执行搜索条件
+//    if($name){
+//        $goodss->where(['like','name',$name]);
+//    }
+//    $goodss = $goodss->all();
+     if ($name){
+         $goods->andWhere(['like','name',$name]);
+     }
+
+     $goods->where(['id'=>$id])->all();
+
      return $this->render('goods',['content'=>$content,'goods'=>$goods,'photh'=>$photh,'pt'=>$pt,'gds'=>$gds]);
     }
 
