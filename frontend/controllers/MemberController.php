@@ -55,6 +55,7 @@ class MemberController extends Controller{
      //反序列化
      $cart = unserialize($value);
       }else{
+        //不存在的情况下就定义成空数组
          $cart = [];
          }
       //var_dump($cart);exit;

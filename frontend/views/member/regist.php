@@ -210,6 +210,12 @@
 
 
                     },
+                    tel{
+                        required: true,
+                        minlength:11;
+
+
+                    }
                     confirm_password: {
                         required: true,
                         minlength: 5,

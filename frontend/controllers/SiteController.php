@@ -85,7 +85,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
 
-        return $this->render('index');
+    return $this->render('index');
     }
 
  public function actionGoods($cate_id){
@@ -95,91 +95,89 @@ class SiteController extends Controller
            //三级分类
            $ids = [$cate_id];
        }else{
-               //一级分类
-    //           //二级分类 2 = >{3, 4 }
-    //           //获取该二级分类下面的三级分类
-    //           $categorys = Goods::find()->where(['parent_id'=>$cate_id])->all();
-
-       $categorys= $cate->children()->select('id')->andWhere(['depth'=>2])->asArray()->all();
-
-       $ids= ArrayHelper::map($categorys,'id','id');
+      //一级分类
+      //二级分类 2 = >{3, 4 }
+      //获取该二级分类下面的三级分类
+      //$categorys = Goods::find()->where(['parent_id'=>$cate_id])->all();
+      $categorys= $cate->children()->select('id')->andWhere(['depth'=>2])->asArray()->all();
+      $ids= ArrayHelper::map($categorys,'id','id');
            //3,4
            //在根据三级分类id查找商品
 
 
        }
-       $goods =Goods::find()->where(['in','goods_category_id',$ids])->all();
-     
-       return  $this->render('list',['goods'=>$goods]);
+      $goods =Goods::find()->where(['in','goods_category_id',$ids])->all();
+
+      return  $this->render('list',['goods'=>$goods]);
 
     }
  public function actionContent($id){
-       $content = GoodsIntro::find()->where(['goods_id'=>$id])->one();
-       $goods = Goods::find()->where(['id'=>$id])->all();
-       $photh = GoodsGallery::find()->where(['goods_id'=>$id])->all();
-                        //修改浏览次数        并且是根据商品的id修改
-       Goods::updateAllCounters(['view_times'=>1],['id'=>$id]);
+     $content = GoodsIntro::find()->where(['goods_id'=>$id])->one();
+     $goods = Goods::find()->where(['id'=>$id])->all();
+     $photh = GoodsGallery::find()->where(['goods_id'=>$id])->all();
+                      //修改浏览次数        并且是根据商品的id修改
+     Goods::updateAllCounters(['view_times'=>1],['id'=>$id]);
 
-       foreach ($photh  as $pt){
+     foreach ($photh  as $pt){
+
+     }
+     foreach ($goods as $gds){
 
        }
-       foreach ($goods as $gds){
-
-        }
-        //var_dump($pt);exit;
-//        var_dump($content);exit;
-      return $this->render('goods',['content'=>$content,'goods'=>$goods,'photh'=>$photh,'pt'=>$pt,'gds'=>$gds]);
+     //var_dump($pt);exit;
+     //var_dump($content);exit;
+     return $this->render('goods',['content'=>$content,'goods'=>$goods,'photh'=>$photh,'pt'=>$pt,'gds'=>$gds]);
     }
 
 
     //添加购物成功 页面
  public function actionAddToCart($goods_id,$amount){
-       //商品添加到购物车
-      //判断是否登录状态如果不是存到cookie
-      if(Yii::$app->user->isGuest){
-      $cookies = Yii::$app->request->cookies;
-       //没登录情况存cookie
-      if($cookies->has('cart')){
-      $value = $cookies->getValue('cart');
-      //反序列化
-      $cart = unserialize($value);
-      }else{
-      $cart = [];
-      }
+      //商品添加到购物车
+     //判断是否登录状态如果不是存到cookie
+     if(Yii::$app->user->isGuest){
+     $cookies = Yii::$app->request->cookies;
+      //没登录情况存cookie
+     if($cookies->has('cart')){
+     $value = $cookies->getValue('cart');
+     //反序列化
+     $cart = unserialize($value);
+     }else{
+     $cart = [];
+     }
 
-      //$cart = [1=>1]   + 2=>3   $cart[2] = 3 --->    $cart = [1=>1,2=>3]
-      //写cookie
-      //判断购物中是否存在该商品,存在,数量累加.不存在,直接赋值
-      if(array_key_exists($goods_id,$cart)){
-          $cart[$goods_id] += $amount;
-      }else{
-          $cart[$goods_id] = $amount;
-      }
-      $cookies = Yii::$app->response->cookies;
-      $cookie = new Cookie();
-      $cookie->name = 'cart';
-      $cookie->value = serialize($cart);
-      $cookies->add($cookie);
+     //$cart = [1=>1]   + 2=>3   $cart[2] = 3 --->    $cart = [1=>1,2=>3]
+     //写cookie
+     //判断购物中是否存在该商品,存在,数量累加.不存在,直接赋值
+     if(array_key_exists($goods_id,$cart)){
+         $cart[$goods_id] += $amount;
+     }else{
+         $cart[$goods_id] = $amount;
+     }
+     $cookies = Yii::$app->response->cookies;
+     $cookie = new Cookie();
+     $cookie->name = 'cart';
+     $cookie->value = serialize($cart);
+     $cookies->add($cookie);
 
-      }else{
-      //已登录的话就保存到数据库
-      $model =new Cart();
-      $member_id= Yii::$app->user->getId();
-      $mode = Cart::find()->andWhere(['goods_id'=>$goods_id])->andWhere(['member_id'=>$member_id])->one();
-      //如果不存在的的话那么就赋值新创建新的
-      if(!$mode){
-      $model->amount=$amount;
-      $model->member_id=$member_id;
-      $model->goods_id=$goods_id;
-      $model->save();
-      }else{
-//       $mode->amount +=$amount;
-//       $mode->save();
-      Cart::updateAll(['amount'=>$mode->amount+$amount],['goods_id'=>$goods_id,'member_id'=>Yii::$app->user->id]);
-         }
+     }else{
+     //已登录的话就保存到数据库
+     $model =new Cart();
+     $member_id= Yii::$app->user->getId();
+     $mode = Cart::find()->andWhere(['goods_id'=>$goods_id])->andWhere(['member_id'=>$member_id])->one();
+     //如果不存在的的话那么就赋值新创建新的
+     if(!$mode){
+     $model->amount=$amount;
+     $model->member_id=$member_id;
+     $model->goods_id=$goods_id;
+     $model->save();
+     }else{
+//      $mode->amount +=$amount;
+//      $mode->save();
+     Cart::updateAll(['amount'=>$mode->amount+$amount],['goods_id'=>$goods_id,'member_id'=>Yii::$app->user->id]);
+        }
 
-      }
-      return $this->redirect(['site/cart']);
+     }
+     return $this->redirect(['site/cart']);
      }
      //购物车页面
  public function actionCart()
@@ -283,7 +281,6 @@ class SiteController extends Controller
       $user_id = Yii::$app->user->getId();
       Cart::deleteAll(['goods_id'=>$id,'member_id'=>$user_id]);
 
-
       }
 
   }
@@ -330,14 +327,12 @@ class SiteController extends Controller
      //送货方式
      //$order->delivery_name = Order::$deliveries[$order->delivery_id][0];//名称 [0]->是名字
      // $order->delivery_price = Order::$deliveries[$order->delivery_id][1];//价格[1]->价格
-
      //支付方式
       $order->total=0;//金额
       $order->status=1;//支付方式
       $order->member_id = Yii::$app->user->id;//用户登录ID
       //var_dump($order);exit;
       //开启事物
-
       $rtaction= Yii::$app->db->beginTransaction();
       try{
       if($order->validate()){//验证保存
@@ -390,10 +385,7 @@ class SiteController extends Controller
       //回滚事物
       $rtaction->rollBack();
 
-
           }
-
-
     //订单提示成功页面
     return $this->render('order2');
 
@@ -434,7 +426,6 @@ class SiteController extends Controller
    foreach ($goods as $goo){
 
    }
-
 
   return $this->render('order3',['orders'=>$orders,'address'=>$a,'goo'=>$goo]);
     }
