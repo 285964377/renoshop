@@ -29,12 +29,12 @@ class MemberController extends Controller{
      if($model->validate()){
 
      $model->password_hash=\Yii::$app->security->generatePasswordHash($model->password_hash);
-       //var_dump($user);
-       $model->save();
+     //var_dump($user);
+     $model->save();
       }
-        //添加成功则给出提示信息
-        //\Yii::$app->session->setFlash('success','注册成功');
-        return $this->redirect(['site/index']);
+     //添加成功则给出提示信息
+     //\Yii::$app->session->setFlash('success','注册成功');
+     return $this->redirect(['site/index']);
      }
 
     return $this->render('regist');
@@ -46,14 +46,18 @@ class MemberController extends Controller{
          $request = new Request();
          if($request->isPost){
          $model->load($request->post(),'');
-
          if($model->login()){
-          // 查询cookie
-          $cookies = \Yii::$app->request->cookies;
-          //取值
-          $va = $cookies->getValue('cart');
-          //反序列化
-          $cart = unserialize($va);
+         //查询cookie
+         $cookies = \Yii::$app->request->cookies;
+         //没登录情况存cookie
+         if($cookies->has('cart')){
+         $value = $cookies->getValue('cart');
+         //反序列化
+         $cart = unserialize($value);
+          }else{
+         $cart = [];
+         }
+         //var_dump($cart);exit;
          //var_dump($cart);exit;
          //遍历以k value 形式
          foreach ($cart as $k=>$va){

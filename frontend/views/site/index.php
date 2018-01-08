@@ -144,7 +144,7 @@
                                  //儿子的儿子分类
                                  foreach ($category3 as $categor3):
                                  ?>
-								<a href=""><?=$categor3->name?></a>
+								<a href="<?=\yii\helpers\Url::to(['site/goods','cate_id'=>$categor3->id])?>"><?=$categor3->name?></a>
                                  <?php  endforeach; ?>
 								</dd>
 							</dl>
