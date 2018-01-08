@@ -109,8 +109,7 @@ class SiteController extends Controller
 
        }
        $goods =Goods::find()->where(['in','goods_category_id',$ids])->all();
-
-
+     
        return  $this->render('list',['goods'=>$goods]);
 
     }
