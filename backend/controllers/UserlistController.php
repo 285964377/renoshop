@@ -26,8 +26,8 @@ class  UserlistController extends Controller{
 
      }
     //添加密码时候采用 Hash加密
-    $user= new Userlist();
-    $model->password=\Yii::$app->security->generatePasswordHash($user->password);
+    //$user= new Userlist();
+    $model->password=\Yii::$app->security->generatePasswordHash( $model->password);
     //$model->password2=\Yii::$app->security->generatePasswordHash($user->password2);
     $model->save();
     //提示and跳转
@@ -69,8 +69,8 @@ class  UserlistController extends Controller{
      }
      }
 
-     \Yii::$app->session->setFlash('success','添加成功');
-     return $this->redirect(['index']);
+         \Yii::$app->session->setFlash('success','添加成功');
+         return $this->redirect(['index']);
 
      }
      return $this->render('add',['model'=>$model,'arr'=>$arr]);
@@ -119,7 +119,7 @@ class  UserlistController extends Controller{
     $authManager->revokeAll($id);
     // 给用户赋予角色
     $authManager->assign($a,$id);
-    }
+    }   
 
    }
      \Yii::$app->session->setFlash('success','添加成功');

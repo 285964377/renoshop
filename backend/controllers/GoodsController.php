@@ -19,7 +19,6 @@ class GoodsController extends Controller{
 
    public function actionIndex(){
        //商品列表
-
        //实例化 调用方法
       $request = \Yii::$app->request;
       $name =empty($request->get('name')) ? '':$request->get('name');
@@ -43,49 +42,49 @@ class GoodsController extends Controller{
 
    }
    //Ajax文件上传
-   public function actionUploader()
+ public function actionUploader()
    {
-     //name= file 所以
-     $img = UploadedFile::getInstanceByName('file');
-     $FimagName = '/upload/' . uniqid() . '.' . $img->extension;
-     if ($img->saveAs(\Yii::getAlias('@webroot') . $FimagName, 0)) {
-         ///将图片上传到七牛云
-         $accessKye ='5P9pKobraO45Wy2rKlmxiY1mJvH9I8YtpYRAsUMY';
-         $secretKye='T8ffPYvx8pG0WuLZ8W76gVYSDZi2-2r47muh-_Lu';
-         $bucket='php0825';
-         //七牛云上的域名地址
-         $domain='p1gsspstg.bkt.clouddn.com';
-         //实例化
-         $auth=new Auth($accessKye,$secretKye);
+    //name= file 所以
+    $img = UploadedFile::getInstanceByName('file');
+    $FimagName = '/upload/' . uniqid() . '.' . $img->extension;
+    if ($img->saveAs(\Yii::getAlias('@webroot') . $FimagName, 0)) {
+     ///将图片上传到七牛云
+     $accessKye ='5P9pKobraO45Wy2rKlmxiY1mJvH9I8YtpYRAsUMY';
+     $secretKye='T8ffPYvx8pG0WuLZ8W76gVYSDZi2-2r47muh-_Lu';
+     $bucket='php0825';
+     //七牛云上的域名地址
+     $domain='p1gsspstg.bkt.clouddn.com';
+     //实例化
+     $auth=new Auth($accessKye,$secretKye);
 
-         //生成上传 Token
-         $token=$auth->uploadToken($bucket);
+     //生成上传 Token
+     $token=$auth->uploadToken($bucket);
 
-         //$fileName='/upload/1.jpg';
-         $filePath= \Yii::getAlias('@webroot').$FimagName;
+     //$fileName='/upload/1.jpg';
+     $filePath= \Yii::getAlias('@webroot').$FimagName;
 
-         //上传到七牛保存的文件名
-         $key =$FimagName;
-         $uploadMgr=new UploadManager();
-         //调用outfile方法进行文件上传
-         list($ret,$err)=$uploadMgr->putFile($token,$key,$filePath);
-         if($err !==null){
-           //如果上传出错就将打出其错误信息
-           return Json::encode(['error'=>1]);
-           // var_dump($err);
-         }else{
-           //拼接URL地址
-           $url="http://{$domain}/{$key}";
-           return Json::encode(['url'=>$url]);
-           //return Json::encode(['url'=>$FimagName]);
-         }
+     //上传到七牛保存的文件名
+     $key =$FimagName;
+     $uploadMgr=new UploadManager();
+     //调用outfile方法进行文件上传
+     list($ret,$err)=$uploadMgr->putFile($token,$key,$filePath);
+     if($err !==null){
+       //如果上传出错就将打出其错误信息
+       return Json::encode(['error'=>1]);
+       // var_dump($err);
+     }else{
+       //拼接URL地址
+       $url="http://{$domain}/{$key}";
+       return Json::encode(['url'=>$url]);
+       //return Json::encode(['url'=>$FimagName]);
+        }
 
      }else{
          //上传失败
          return Json::encode(['error'=>1]);
      }
    }
-   public function actionAdd(){
+ public function actionAdd(){
      //实例化
     $model = new Goods();
     $request = new Request();
@@ -105,13 +104,12 @@ class GoodsController extends Controller{
      if($count!=null){//如果不是空那么就加1
      $count->count+=1;
      }else{
-         //$count = str_pad('0',5,0,STR_PAD_RIGHT);
-         $count = new GoodsDayCount();
-         $count->count =1;//保持1 不变
-         $count->day= $date;
+       //$count = str_pad('0',5,0,STR_PAD_RIGHT);
+       $count = new GoodsDayCount();
+       $count->count =1;//保持1 不变
+       $count->day= $date;
      }
      $st='00000';
-
      $count->save();
     //$model->sn=date('Ymd').str_pad($count->count,6,0,0);
      $model->sn=date('Ymd').$st+$count->count;
@@ -123,13 +121,13 @@ class GoodsController extends Controller{
      $Intor->goods_id=$model->id;
      $Intor->content=$model->content;
      //var_dump($Intor);exit;
-    //保存
-   //$Goods->save();
+     //保存
+     //$Goods->save();
      $Intor->save();
-        // $Goods->save();
+     // $Goods->save();
    }
-      // die;
-       //添加成功则给出提示信息
+    // die;
+     //添加成功则给出提示信息
      \Yii::$app->session->setFlash('success','添加成功');
      return $this->redirect(['index']);
      }
@@ -141,15 +139,14 @@ class GoodsController extends Controller{
     //商品品牌遍历
    $brand = Brand::find()->all();
    $brand =ArrayHelper::map($brand,'id','name');
-
    return $this->render('add',['model'=>$model,'gds'=>$gds,'brand'=>$brand]);
 
    }
-   public function actionDelete($id){
+ public function actionDelete($id){
    Goods::deleteAll("id in ($id)");
-       //添加成功则给出提示信息
-       \Yii::$app->session->setFlash('success','删除成功');
-       return $this->redirect(['index']);
+   //添加成功则给出提示信息
+   \Yii::$app->session->setFlash('success','删除成功');
+   return $this->redirect(['index']);
 
    }
     //富文本编辑器
@@ -168,51 +165,45 @@ class GoodsController extends Controller{
         ];
     }
     //修改
-      public function actionEdit($id){
+ public function actionEdit($id){
+   //实例化
+   $model = Goods::findOne(['id'=>$id]);
+   $request = new Request();
+   $Intor = new GoodsIntro();
+   if($request->isPost){
+       //加载
+    $model->load($request->post());
+    $create_time= time();
+    $model->create_time= $create_time;
+    if($model->validate()){
+    $model->save();
+    $Intor->goods_id= $model->id;
+    $Intor->content=$model->content;
+    }   //保存
+    $Intor->save();
+    //添加成功则给出提示信息
+    \Yii::$app->session->setFlash('success','添加成功');
+    return $this->redirect(['index']);
+    }
+    //商品分类遍历
+    $goods = GoodsCategory::find()->all();
+    //需要的就是商品分类的 id 并且找到名称
+    $gds=   ArrayHelper::map($goods,'id','name');
+    //商品品牌遍历
+    $brand = Brand::find()->all();
+    $brand =ArrayHelper::map($brand,'id','name');
+    return $this->render('add',['model'=>$model,'gds'=>$gds,'brand'=>$brand]);
 
-          //实例化
-       $model = Goods::findOne(['id'=>$id]);
-       $request = new Request();
-       $Intor = new GoodsIntro();
-       if($request->isPost){
-           //加载
-        $model->load($request->post());
-        $create_time= time();
-        $model->create_time= $create_time;
-        if($model->validate()){
-        $model->save();
-        $Intor->goods_id= $model->id;
-        $Intor->content=$model->content;
-        }   //保存
-        $Intor->save();
-        //添加成功则给出提示信息
-          \Yii::$app->session->setFlash('success','添加成功');
-          return $this->redirect(['index']);
-        }
-         //商品分类遍历
-         $goods = GoodsCategory::find()->all();
-         //需要的就是商品分类的 id 并且找到名称
-         $gds=   ArrayHelper::map($goods,'id','name');
-         //商品品牌遍历
-         $brand = Brand::find()->all();
-         $brand =ArrayHelper::map($brand,'id','name');
+    }
+  public function actionGallery($id){
+   $Gall= GoodsGallery::find()->where(['goods_id'=>$id])->all();
+    //保存
+    //echo Json::encode(['id'=>$Gall->id]);
 
-         return $this->render('add',['model'=>$model,'gds'=>$gds,'brand'=>$brand]);
-
-      }
-      public function actionGallery($id){
-
-      $Gall= GoodsGallery::find()->where(['goods_id'=>$id])->all();
-
-      //保存
-
-//      echo Json::encode(['id'=>$Gall->id]);
-
-      return $this->render('gallery',['Gall'=>$Gall,'id'=>$id]);
-      }
+    return $this->render('gallery',['Gall'=>$Gall,'id'=>$id]);
+    }
       //相册功能 AJax图片上上传
-     public function actionGalleryup(){
-
+  public function actionGalleryup(){
      $img = UploadedFile::getInstanceByName('file');
      $FimagName= '/upload/'.uniqid().'.'.$img->extension;
      if($img->saveAs(\Yii::getAlias('@webroot').$FimagName,0)){

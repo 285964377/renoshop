@@ -32,12 +32,17 @@
 <?php
 $js = <<<JS
   
-        $("table").on("click",'tr td a:last-child',function() {
-        //查找tr下面的 id 属性
-        var id = $(this).closest("tr").attr('id');
-        var url=$(this).closest('tr').attr('url');
-        $.get(url,{"id":id});
-        $(this).closest("tr").remove();
+       $("table").on("click",'tr td a:last-child',function() {
+       //查找tr下面的 id 属性
+       //alert("确认删除?删除后不可恢复");
+       var id = $(this).closest("tr").attr('id');
+       var url=$(this).closest('tr').attr('url');
+       confirm('确认删除吗?');
+       if(id &&url){
+       $.get(url,{"id":id});
+       $(this).closest("tr").remove();
+       }
+       
       
     })
 

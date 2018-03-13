@@ -16,8 +16,6 @@ class  Userlist extends  ActiveRecord implements IdentityInterface
 
         return [
             [['username', 'sex', 'password', 'email', 'description'], 'required', 'message' => '不能是空'],
-            //['password','compare','compareAttribute'=>'password2','message'=>'两次密码必须一致'],
-            //['password2','compare','compareAttribute'=>'password','message'=>'密码必须一致']
 
         ];
     }

@@ -29,8 +29,7 @@ class BrandController extends \yii\web\Controller
     return Json::encode(['error'=>1]);
      }
     }
- public function actionAdd()
-    {
+ public function actionAdd(){
     $model = new Brand();
     $request = new Request();
     if($request->isPost) {
@@ -51,9 +50,9 @@ class BrandController extends \yii\web\Controller
     $model= Brand::findOne(['id'=>$id]);
     $request = new Request();
     if ($request->isPost) {
-         //加载
+    //加载
     $model->load($request->post());
-      //验证
+    //验证
     if($model->validate()) {
       }//保存
     $model->save();
@@ -62,11 +61,13 @@ class BrandController extends \yii\web\Controller
       }
     return $this->render('edit',['model'=>$model]);
     }
+   //删除
  public function actionDelete($id){
     $b=Brand::findOne(['id'=>$id]);
     $b::updateAll(['status'=>-1],['id'=>$id]);
       // \Yii::$app->session->setFlash('success', '删除成功');
       }
+     //RBAC
   public function behaviors()
   {
       return [

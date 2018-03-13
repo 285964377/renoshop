@@ -35,10 +35,15 @@
 <?php
 $js= <<<JS
 
+//注册点击事件
 $("table").on('click','tr td a:last-child',function() {
+     //获取ID
      var id = $(this).closest('tr').attr("id");
+     //获取URL
      var url= $(this).closest('tr').attr('url');
+     //Get形式传值
      $.get(url,{"id":id});
+     //找到并且移除
      $(this).closest("tr").remove()
     
 })

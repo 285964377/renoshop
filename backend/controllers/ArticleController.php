@@ -19,13 +19,12 @@ class ArticleController extends Controller
     return $this->render('index', ['Acticle' => $Acticle]);
    }
      //添加功能
- public function actionAdd()
-   {
+ public function actionAdd(){
     $modle = new Article();//文章实例化
     $request = new Request();
     $detail = new ArticleDetail();//文章详情实例化
     if ($request->isPost){
-       //加载
+    //加载
     $modle->load($request->post());
     //时间戳 传入数据库
     $create_time=time();
@@ -45,7 +44,7 @@ class ArticleController extends Controller
     }
     $ArticleCategory=ArticleCategory::find()->all();
     $option=ArrayHelper::map($ArticleCategory,'id','name');
-    //  var_dump($option);exit;
+    //var_dump($option);exit;
     return $this->render('add',['modle'=>$modle,'option'=>$option]);
    }
 

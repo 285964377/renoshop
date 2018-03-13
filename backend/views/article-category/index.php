@@ -5,7 +5,7 @@
 <table class="table">
     <tr>
         <th>id</th>
-        <th>文章名字</th>
+        <th>分类文章名字</th>
         <th>简介</th>
         <th>排序</th>
         <th>状态</th>

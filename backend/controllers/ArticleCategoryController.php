@@ -10,8 +10,8 @@ class ArticleCategoryController extends Controller {
 
    //列表展示
  public function actionIndex(){
-      $Article=ArticleCategory::find()->all();
-      return $this->render('index',['Article'=>$Article]);
+    $Article=ArticleCategory::find()->all();
+    return $this->render('index',['Article'=>$Article]);
    }
     //添加
  public function actionAdd(){
@@ -30,10 +30,10 @@ class ArticleCategoryController extends Controller {
     //提示之后则跳转到首页
     return $this->redirect(['index']);
     }else{//如果出错则打印出错误信息;
-        var_dump($model->getErrors());
-        }
-      }
-      return $this->render('add',['modle'=>$model]);
+    var_dump($model->getErrors());
+    }
+     }
+    return $this->render('add',['modle'=>$model]);
    }
  public function actionEdit($id){
     //实例化
@@ -54,7 +54,7 @@ class ArticleCategoryController extends Controller {
      var_dump($model->getErrors());
      }
      }
-     return $this->render('edit',['modle'=>$model]);
+    return $this->render('edit',['modle'=>$model]);
    }
      //删除功能
  public function actionDelete($id){

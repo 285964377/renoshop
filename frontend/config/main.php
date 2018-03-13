@@ -44,15 +44,15 @@ return [
             'sk'=>'YUeF0YUxqMlGh6Dhf5w6zsbmrMipxQ',
             'sign'=>'叶哥书店',
             'template'=>'SMS_120130244'
-        ]
-        /*
+        ],
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];

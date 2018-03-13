@@ -106,15 +106,24 @@ class MemberController extends Controller{
     }
     //电话号码验证存入redis
   public function actionSms($phone){
+      $redis = new \Redis();
+      $redis->connect('127.0.0.1');
      //正则表达式 电话号码验证
-
+     //检测该手机上一次的验证码发送的时间
+     //$tll = $redis->ttl('code_',$phone);//ttl获得此数据的时间
+     //if($tll && $tll >){
+     //
+     //}
+      $ttl=$redis->ttl('code_'.$phone);//ttl获得此key的剩余时间
+      if($ttl && $ttl >(30*60-60)){
+        echo "距离上次发送短信不到60秒".($ttl+60-1800).'秒后再试';
+        exit;
+      }
       $code=rand(1000,9999);
       $result=\Yii::$app->sms->send($phone,['code'=>$code]);
       //var_dump($result);
       if($result->Code=='OK'){
       //保存到redis
-      $redis = new \Redis();
-      $redis->connect('127.0.0.1');
       //把电话号码和验证信息关联起来
       $redis->set('code_'.$phone,$code,30*60);
       //短信发送成功;
@@ -195,6 +204,7 @@ class MemberController extends Controller{
 //        }
 //
 //    }
+       //验证码
     public function actions()
     {
         return [

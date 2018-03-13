@@ -12,9 +12,7 @@ class MenuController extends Controller{
     $model= Menu::find()->all();
     return $this->render('index',['model'=>$model]);
 }
-
-
-
+ //添加功能
  public function actionAdd(){
 
     $model = new Menu();
@@ -76,12 +74,12 @@ class MenuController extends Controller{
 //       $pername[$p2->description] = $p2->description;
 //   }
      if($request->isPost){
-         $model->load($request->post());
+       $model->load($request->post());
 
       if($model->validate()){
-         $model->save();
-         \Yii::$app->session->setFlash('success','添加成功');
-         return $this->redirect(['index']);
+       $model->save();
+       \Yii::$app->session->setFlash('success','添加成功');
+       return $this->redirect(['index']);
       }
      }
        return  $this->render('add',['model'=>$model,'per'=>$per,'rows'=>$rows]);

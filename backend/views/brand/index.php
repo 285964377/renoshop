@@ -37,9 +37,7 @@ $js =
     $("table").on("click",'tr td a:last-child',function(){
      var id = $(this).closest('tr').attr("id");
      var ulr =$(this).closest('tr').attr("url");
-     
      $.get(ulr,{"id":id});
-     
      $(this).closest("tr").remove();
      
    })

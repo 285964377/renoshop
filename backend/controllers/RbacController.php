@@ -78,7 +78,6 @@ class RbacController extends Controller{
      }
 
      }
-
       return $this->render('edit',['model'=>$model]);
      }
      //删除权限功能...
@@ -100,7 +99,6 @@ class RbacController extends Controller{
  public function actionRoleIndex(){
    $model= \Yii::$app->authManager->getRoles();
   // var_dump($model);
-
    return  $this->render('role-index',['model'=>$model]);
 
    }

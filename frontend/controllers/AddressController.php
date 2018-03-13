@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 use frontend\models\Address;
 use frontend\models\Region;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Request;
 
@@ -66,10 +67,10 @@ class AddressController extends Controller
         return  $this->render('address',['model'=>$model,'user_id'=>$user_id]);
     }
   //收货地址删除
- public function actionDelete($id){
-        Address::deleteAll("id in ($id)");
+public function actionDelete($id){
+ Address::deleteAll("id in ($id)");
 
-       }
+ }
  //默认地址修改
  public function actionDefault($is_default,$id){
 

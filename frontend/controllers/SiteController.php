@@ -3,11 +3,13 @@ namespace frontend\controllers;
 
 use backend\models\GoodsGallery;
 use backend\models\GoodsIntro;
+use common\models\SphinxClient;
 use frontend\models\Address;
 use frontend\models\Brand;
 use frontend\models\Cart;
 use frontend\models\Goods;
 use frontend\models\GoodsCategory;
+use frontend\models\Member;
 use frontend\models\Order;
 use frontend\models\OrderGoods;
 use Yii;
@@ -82,17 +84,39 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-  public function actionIndex(){
+  public function actionIndex($name){
+     //ob缓存
 
+     //开启ob缓存
     $request =Yii::$app->request;
-    $name = empty($request->get('name'))?'':$request->get('name');
-    $goodss = Goods::find();
-    //存在则执行搜索条件
-    if($name){
-    $goodss->where(['like','name',$name]);
-    }
-    $goodss = $goodss->all();
+      $cl = new SphinxClient();
+      $cl->SetServer ( '127.0.0.1', 9312);
+      $cl->SetConnectTimeout ( 10 );
+      $cl->SetArrayResult ( true );
+      // $cl->SetMatchMode ( SPH_MATCH_ANY);
+      $cl->SetMatchMode ( SPH_MATCH_EXTENDED2);
+      $cl->SetLimits(0, 1000);
+      $info = "{$name}";//查询关键字
+      $res = $cl->Query($info, 'mysql');//查询用到的索引
+      //存在则执行搜索条件
+      //var_dump($res);exit;
+      $ids=[];
+      if(isset($res['matches'])){
+       foreach($res['matches'] as $value){
+       $ids[]=$value['id'];
+       }
+      }
+
+    //var_dump($ids);exit;
+    $goodss = Goods::find()->where(["in", "id",$ids])->all();
+    //var_dump($goodss);exit;
+
     return $this->render('index',['goodss'=>$goodss]);
+
+
+
+    //file_put_contents('index.html',$contents);
+
     }
 
  public function actionGoods($cate_id){
@@ -108,9 +132,8 @@ class SiteController extends Controller
       //$categorys = Goods::find()->where(['parent_id'=>$cate_id])->all();
       $categorys= $cate->children()->select('id')->andWhere(['depth'=>2])->asArray()->all();
       $ids= ArrayHelper::map($categorys,'id','id');
-           //3,4
-           //在根据三级分类id查找商品
-
+      //3,4
+      //在根据三级分类id查找商品
        }
       $goods =Goods::find()->where(['in','goods_category_id',$ids])->all();
 
@@ -120,8 +143,8 @@ class SiteController extends Controller
  public function actionContent($id){
      $content = GoodsIntro::find()->where(['goods_id'=>$id])->one();
      $request = Yii::$app->request;
-     $name = empty($request->get('name'))?'':$request->get('name');
-     $goods = Goods::find();
+     //$name = empty($request->get('name'))?'':$request->get('name');
+     $goods = Goods::find()->where(['id'=>$id])->all();;
      $photh = GoodsGallery::find()->where(['goods_id'=>$id])->all();
                       //修改浏览次数        并且是根据商品的id修改
      Goods::updateAllCounters(['view_times'=>1],['id'=>$id]);
@@ -138,11 +161,11 @@ class SiteController extends Controller
 //        $goodss->where(['like','name',$name]);
 //    }
 //    $goodss = $goodss->all();
-     if ($name){
-         $goods->andWhere(['like','name',$name]);
-     }
+//     if ($name){
+//         $goods->andWhere(['like','name',$name]);
+//     }
 
-     $goods->where(['id'=>$id])->all();
+
 
      return $this->render('goods',['content'=>$content,'goods'=>$goods,'photh'=>$photh,'pt'=>$pt,'gds'=>$gds]);
     }
@@ -162,7 +185,6 @@ class SiteController extends Controller
      }else{
      $cart = [];
      }
-
      //$cart = [1=>1]   + 2=>3   $cart[2] = 3 --->    $cart = [1=>1,2=>3]
      //写cookie
      //判断购物中是否存在该商品,存在,数量累加.不存在,直接赋值
@@ -213,7 +235,6 @@ class SiteController extends Controller
       return false;
       }
       $ids = array_keys($cart);
-
 
      } else {
      //如果已经登录购物车数据从数据库读取
@@ -344,7 +365,7 @@ class SiteController extends Controller
      //delivery_id
      //送货方式
      //$order->delivery_name = Order::$deliveries[$order->delivery_id][0];//名称 [0]->是名字
-     // $order->delivery_price = Order::$deliveries[$order->delivery_id][1];//价格[1]->价格
+     ///$order->delivery_price = Order::$deliveries[$order->delivery_id][1];//价格[1]->价格
      //支付方式
       $order->total=0;//金额
       $order->status=1;//支付方式
@@ -387,57 +408,59 @@ class SiteController extends Controller
       }else{
       //如果库存不够的话 则抛出异常
       throw new Exception('抱歉.....商品库存不够了请修改数量或者购买其他产品!');
-
        }
-          }
+       }
       //运费处理
       $order->total+=$order->delivery_price;
       $order->save();//在保存上去
       //清除购物车数据
       Cart::deleteAll(['member_id'=>Yii::$app->user->id]);
+      //获取邮件
+      $email = Yii::$app->user->identity->email;
+      //发送邮件
+      Yii::$app->mailer->compose()
+      ->setFrom('18380200885@163.com')//发送者
+      ->setTo($email)//发送给用户
+      ->setSubject('测试主题')//邮件主题
+      ->setHtmlBody('你好嘛?1!@#!@#$#@%$&%^&')//内容
+      ->send();
       //提交事物
       $rtaction->commit();
-
-         //捕获异常
+      //捕获异常
       }catch (Exception $e){
       //回滚事物
       $rtaction->rollBack();
 
-          }
-    //订单提示成功页面
-    return $this->render('order2');
+      }
+      //订单提示成功页面
+      return $this->render('order2');
 
        }
-
-
-
-    //订单提交页面显示
-    return $this->render('order',['address'=>$address,'cart'=>$cart,'orders'=>$orders]);
+     //订单提交页面显示
+     return $this->render('order',['address'=>$address,'cart'=>$cart,'orders'=>$orders]);
    }
 
     //订单列表
  public function actionList(){
-     if(Yii::$app->user->isGuest){
-     return $this->redirect(['member/login']);
+      if(Yii::$app->user->isGuest){
+      return $this->redirect(['member/login']);
      }
 
    //订单查询 根据用户登录ID 查询
-  $goods = Order::find()->where(['member_id'=>Yii::$app->user->getId()])->all();
-
-  //空数组后面存放数据
-  $orders=[];
-  $address=[];
-  foreach ($goods as $good){
-  //g根据用户ID 查询发货人姓名
-  $Address = Address::findOne(['user_id'=>$good->member_id]);
-  //订单详情
+   $goods = Order::find()->where(['member_id'=>Yii::$app->user->getId()])->all();
+   //空数组后面存放数据
+   $orders=[];
+   $address=[];
+   foreach ($goods as $good){
+   //g根据用户ID 查询发货人姓名
+   $Address = Address::findOne(['user_id'=>$good->member_id]);
+   //订单详情
    $address[]=$Address;
    $order = OrderGoods::findOne(['order_id'=>$good->id]);
    $orders[]=$order;
 
      }
-
-  //var_dump($orders);exit;
+   //var_dump($orders);exit;
    foreach ($address as $a){
 
    }
@@ -447,7 +470,42 @@ class SiteController extends Controller
 
   return $this->render('order3',['orders'=>$orders,'address'=>$a,'goo'=>$goo]);
     }
+ //redis 测试
+ public function actionReids(){
+   $redis= new \Redis();
+   $redis->connect('127.0.0.1');
+   //name => 张三 过期时间为30秒
+   $redis->set('name','张三','30');
+   $redis->set('age','18');
+ //mset //同时设置一个或多个 key-value 对
+  //mget //返回所有(一个或多个)给定 key 的值
+  //$redis->get('name');
+   if($redis->get('age')){
+   $redis->incr('age');//存在则+1
+   }else{
+   $redis->decr('age');//不存在减1
+   }
 
+   }
+  //商品搜索功能测试
+ public function actionSearch(){
+
+     $cl = new SphinxClient();
+     $cl->SetServer ( '127.0.0.1', 9312);
+     //$cl->SetServer ( '10.6.0.6', 9312);
+     //$cl->SetServer ( '10.6.0.22', 9312);
+     //$cl->SetServer ( '10.8.8.2', 9312);
+     $cl->SetConnectTimeout ( 10 );
+     $cl->SetArrayResult ( true );
+    // $cl->SetMatchMode ( SPH_MATCH_ANY);
+     $cl->SetMatchMode ( SPH_MATCH_EXTENDED2);
+     $cl->SetLimits(0, 1000);
+     $info = '99A';//查询关键字
+     $res = $cl->Query($info, 'mysql');//查询用到的索引
+     //print_r($cl);
+     print_r($res);
+
+ }
     /**
      * Logs in a user.
      *

@@ -56,8 +56,8 @@ class GoodsCategoryController extends Controller{
     if($model->validate()){
     //如果存在了 就创建子结点
     if($model->parent_id){
-        $parent=  GoodsCategory::findOne(['id'=>$model->parent_id]);
-        $model->appendTo($parent);
+       $parent=  GoodsCategory::findOne(['id'=>$model->parent_id]);
+       $model->appendTo($parent);
     }else{
         //如果没有就创建根结点
     $model->makeRoot();
@@ -71,16 +71,16 @@ class GoodsCategoryController extends Controller{
     return $this->render('edit',['model'=>$model]);
 
    }
-    public function actionDelete($id){
-    $Goods=GoodsCategory::findOne(['id'=>$id]);
-    //如果存在根目录下级则无法被删除...
+  public function actionDelete($id){
+     $Goods=GoodsCategory::findOne(['id'=>$id]);
+     //如果存在根目录下级则无法被删除...
     if($Goods->parent_id){
-        //提示信息
-        \Yii::$app->session->setFlash('success','存在下级根无法被删除');
-       // return $this->redirect(['index']);
+     //提示信息
+     \Yii::$app->session->setFlash('success','存在下级根无法被删除');
+     // return $this->redirect(['index']);
     }else{
-        //没有就成功删除
-        $Goods= GoodsCategory::deleteAll("id in ($id)");
+     //没有就成功删除
+     $Goods= GoodsCategory::deleteAll("id in ($id)");
     }
 
    }
